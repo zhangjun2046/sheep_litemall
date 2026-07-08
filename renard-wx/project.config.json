@@ -24,11 +24,20 @@
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
-    "minifyWXSS": true
+    "minifyWXSS": true,
+    "compileWorklet": false,
+    "enhance": false,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "miniprogram",
   "libVersion": "2.4.0",
-  "appid": "wxa5b486c6b918ecfb",
+  "appid": "wx02b6a6438695bf92",
   "projectname": "Renard",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
@@ -199,5 +208,10 @@
         }
       ]
     }
-  }
+  },
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }
