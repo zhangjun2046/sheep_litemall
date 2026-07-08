@@ -1,5 +1,7 @@
 # litemall
 
+使用Sonnet5 LLM，实现客户端微信小程序只显示"搜索栏"、"banner"、"类目图"、"人气推荐"，其他功能隐藏。
+
 又一个小商场系统。
 
 litemall = Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户移动端
