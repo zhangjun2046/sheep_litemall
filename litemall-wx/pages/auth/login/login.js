@@ -38,7 +38,12 @@ Page({
           this.doLogin(res.userInfo)
         },
         fail: () => {
-          util.showErrorToast('微信登录失败');
+          // getUserProfile 已被微信收紧，用户拒绝或接口不可用时仍用默认资料完成登录
+          this.doLogin({
+            nickName: '微信用户',
+            avatarUrl: 'https://yanxuan.nosdn.127.net/80841d8631aebaf31be96598a1e201bd.png',
+            gender: 0
+          })
         }
       })
     }
@@ -52,7 +57,12 @@ Page({
     }
   },
   doLogin: function(userInfo) {
-    user.checkLogin().catch(() => {
+    user.checkLogin().then(() => {
+      app.globalData.hasLogin = true;
+      wx.navigateBack({
+        delta: 1
+      })
+    }).catch(() => {
       user.loginByWeixin(userInfo).then(res => {
         app.globalData.hasLogin = true;
         wx.navigateBack({

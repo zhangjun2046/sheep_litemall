@@ -1,8 +1,10 @@
 litemall:
-  # 开发者应该设置成自己的wx相关信息
+  # 开发者应该设置成自己的wx相关信息（app-id 须与 litemall-wx/project.config.json 一致）
   wx:
-    app-id: wxa5b486c6b918ecfb
+    app-id: wx02b6a6438695bf92
     app-secret: e04004829d4c383b4db7769d88dfbca1
+    # 本地联调：code2session 失败时模拟登录；上线前改为 false，并填写真实 app-secret
+    mock-enabled: true
     mch-id: 111111
     mch-key: xxxxxx
     notify-url: http://www.example.com/wx/order/pay-notify

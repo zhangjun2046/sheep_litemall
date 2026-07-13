@@ -538,8 +538,8 @@ Page({
             // 如果storage中设置了cartId，则是立即购买，否则是购物车购买
             try {
               wx.setStorageSync('cartId', res.data);
-              wx.setStorageSync('grouponRulesId', checkedGroupon.id);
-              wx.setStorageSync('grouponLinkId', that.data.grouponLink.id);
+              wx.setStorageSync('grouponRulesId', checkedGroupon.id || 0);
+              wx.setStorageSync('grouponLinkId', (that.data.grouponLink && that.data.grouponLink.id) || 0);
               wx.navigateTo({
                 url: '/pages/checkout/checkout'
               })

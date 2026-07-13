@@ -5,6 +5,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.linlinjava.litemall.core.config.WxProperties;
 import org.linlinjava.litemall.core.notify.NotifyService;
 import org.linlinjava.litemall.core.notify.NotifyType;
 import org.linlinjava.litemall.core.util.CharUtil;
@@ -23,11 +24,13 @@ import org.linlinjava.litemall.wx.service.CaptchaCodeManager;
 import org.linlinjava.litemall.wx.service.UserTokenManager;
 import org.linlinjava.litemall.core.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +58,9 @@ public class WxAuthController {
 
     @Autowired
     private CouponAssignService couponAssignService;
+
+    @Autowired
+    private WxProperties wxProperties;
 
     /**
      * 账号登录
@@ -129,7 +135,14 @@ public class WxAuthController {
             sessionKey = result.getSessionKey();
             openId = result.getOpenid();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("微信登录 code2session 失败, appId=" + wxProperties.getAppId(), e);
+        }
+
+        // 本地开发：AppID/Secret 未就绪或与小程序不一致时，使用模拟 openId 完成联调
+        if ((sessionKey == null || openId == null) && wxProperties.isMockEnabled()) {
+            openId = "dev_" + DigestUtils.md5DigestAsHex(code.getBytes(StandardCharsets.UTF_8)).substring(0, 16);
+            sessionKey = "mock_session_key";
+            logger.warn("微信登录启用本地 mock，openId=" + openId);
         }
 
         if (sessionKey == null || openId == null) {

@@ -20,6 +20,36 @@ function formatNumber(n) {
 }
 
 /**
+ * 微信基础库已禁止 <image> 使用 HTTP，将外链统一升级为 HTTPS。
+ * 本地存储地址（localhost/127.0.0.1）保留 HTTP，便于本地联调。
+ */
+function upgradeHttpUrl(value) {
+  if (typeof value !== 'string' || value.indexOf('http://') !== 0) {
+    return value;
+  }
+  if (value.indexOf('http://localhost') === 0 || value.indexOf('http://127.0.0.1') === 0) {
+    return value;
+  }
+  return 'https://' + value.substring('http://'.length);
+}
+
+function upgradeHttpInData(data) {
+  if (Array.isArray(data)) {
+    return data.map(upgradeHttpInData);
+  }
+  if (data && typeof data === 'object') {
+    var result = {};
+    for (var key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        result[key] = upgradeHttpInData(data[key]);
+      }
+    }
+    return result;
+  }
+  return upgradeHttpUrl(data);
+}
+
+/**
  * 封封微信的的request
  */
 function request(url, data = {}, method = "GET") {
@@ -49,7 +79,7 @@ function request(url, data = {}, method = "GET") {
               url: '/pages/auth/login/login'
             });
           } else {
-            resolve(res.data);
+            resolve(upgradeHttpInData(res.data));
           }
         } else {
           reject(res.errMsg);

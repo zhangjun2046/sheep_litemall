@@ -193,6 +193,7 @@ flowchart LR
 | 管理后台登录失败 | 未导入 data.sql | 重新导入 litemall_data.sql |
 | 管理后台 502/404 | 后端未启动 | 先确认 8080 可用 |
 | 小程序首页空白 | 后端未启动或域名校验未关闭 | 检查 API 请求、关闭域名校验 |
+| 微信直接登录失败 | 小程序 AppID 与后端 `litemall.wx.app-id` 不一致，或 secret 无效 | 保证两边 AppID 一致；本地可设 `litemall.wx.mock-enabled: true` |
 | Maven 下载超时 | 阿里云镜像网络问题 | 使用 `.mvn-central-settings.xml` 或换镜像 |
 | npm install 卡住/超时 | npmmirror 不可达 | 改用 `registry.npmjs.org` |
 | 地址选择异常 | 缺少 region 数据 | 确认 litemall_region 表有数据 |
@@ -201,11 +202,15 @@ flowchart LR
 
 以下功能需要真实第三方配置，本地开发可忽略：
 
-- 微信登录 / 微信支付（需真实 appid、mch-id）
+- 微信支付（需真实 mch-id / mch-key）
 - 短信通知、邮件通知
 - 云存储（OSS/COS/七牛，默认使用本地存储）
 
-相关占位配置见 [litemall-core/src/main/resources/application-core.yml](../litemall-core/src/main/resources/application-core.yml)。
+**微信登录：** 本地默认开启 `litemall.wx.mock-enabled: true`（见 [application-core.yml](../litemall-core/src/main/resources/application-core.yml)），`code2session` 失败时会用模拟 openId 完成登录。上线前请：
+
+1. 将 `app-id` 与小程序 `project.config.json` 保持一致
+2. 填写微信公众平台真实 `app-secret`
+3. 将 `mock-enabled` 改为 `false`
 
 ## 十一、停止服务
 

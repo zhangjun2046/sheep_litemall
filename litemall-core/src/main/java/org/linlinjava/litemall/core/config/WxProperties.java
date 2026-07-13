@@ -23,8 +23,22 @@ public class WxProperties {
 
     private String aesKey;
 
+    /**
+     * 本地开发开关：code2session 失败时使用模拟 openId 完成登录。
+     * 生产环境必须为 false。
+     */
+    private boolean mockEnabled = false;
+
     public String getToken() {
         return token;
+    }
+
+    public boolean isMockEnabled() {
+        return mockEnabled;
+    }
+
+    public void setMockEnabled(boolean mockEnabled) {
+        this.mockEnabled = mockEnabled;
     }
 
     public void setToken(String token) {
