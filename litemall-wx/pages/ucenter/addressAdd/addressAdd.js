@@ -311,6 +311,10 @@ Page({
       return false;
     }
 
+    if (!check.isValidPhone(address.tel)) {
+      util.showErrorToast('请输入11位手机号');
+      return false;
+    }
 
     if (address.areaCode == 0) {
       util.showErrorToast('请输入省市区');
@@ -352,6 +356,8 @@ Page({
           console.log("set address");
         }
         wx.navigateBack();
+      } else {
+        util.showErrorToast(res.errmsg || '保存失败');
       }
     });
 

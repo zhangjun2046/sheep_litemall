@@ -1,10 +1,8 @@
+/**
+ * 校验中国大陆手机号：1 开头的 11 位数字（与后端 RegexUtil.isMobileSimple 一致）
+ */
 function isValidPhone(str) {
-  var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-  if (!myreg.test(str)) {
-    return false;
-  } else {
-    return true;
-  }
+  return /^[1]\d{10}$/.test(str);
 }
 
 module.exports = {
