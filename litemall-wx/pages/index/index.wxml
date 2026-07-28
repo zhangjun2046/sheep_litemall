@@ -10,32 +10,19 @@
         <swiper-item wx:for="{{banner}}" wx:key="id">
             <block wx:if="{{item.link>0}}">
                 <navigator url="/pages/goods/goods?id={{item.link}}">
-                    <image src="{{item.url}}" background-size="cover"></image>
+                    <image src="{{item.url}}" mode="aspectFill" binderror="onImageError" data-src="{{item.url}}"></image>
                 </navigator>
             </block>
             <block wx:else>
-                <image src="{{item.url}}" background-size="cover"></image>
+                <image src="{{item.url}}" mode="aspectFill" binderror="onImageError" data-src="{{item.url}}"></image>
             </block>
         </swiper-item>
     </swiper>
-    <view class="m-menu">
-        <navigator class="item" url="/pages/category/category?id={{item.id}}" wx:for="{{channel}}" wx:key="id">
-            <image src="{{item.iconUrl}}" background-size="cover"></image>
-            <text>{{item.name}}</text>
-        </navigator>
-    </view>
     <view class="a-section a-popular" wx:if="{{hotGoods.length > 0}}">
-        <view class="h">
-            <view>
-                <navigator url="../hotGoods/hotGoods">
-                    <text class="txt">人气推荐</text>
-                </navigator>
-            </view>
-        </view>
         <view class="b">
             <view class="item" wx:for="{{hotGoods}}" wx:for-index="index" wx:for-item="item" wx:key="id">
                 <navigator url="/pages/goods/goods?id={{item.id}}">
-                    <image class="img" src="{{item.picUrl}}" background-size="cover"></image>
+                    <image class="img" src="{{item.picUrl}}" mode="aspectFill" binderror="onImageError" data-src="{{item.picUrl}}"></image>
                     <view class="right">
                         <view class="text">
                             <text class="name">{{item.name}}</text>

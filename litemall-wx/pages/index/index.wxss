@@ -8,37 +8,6 @@
   height: 417rpx;
 }
 
-.m-menu {
-  background: #fff;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  padding-bottom: 0rpx;
-  padding-top: 25rpx;
-}
-
-.m-menu .item {
-  width: 150rpx;
-  height: 126rpx;
-}
-
-.m-menu image {
-  display: block;
-  width: 58rpx;
-  height: 58rpx;
-  margin: 0 auto;
-  margin-bottom: 12rpx;
-}
-
-.m-menu text {
-  display: block;
-  font-size: 24rpx;
-  text-align: center;
-  margin: 0 auto;
-  line-height: 1;
-  color: #333;
-}
-
 .a-section {
   width: 750rpx;
   height: auto;
@@ -46,23 +15,6 @@
   background: #fff;
   color: #333;
   margin-top: 20rpx;
-}
-
-.a-section .h {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-  height: 130rpx;
-}
-
-.a-section .h .txt {
-  padding-right: 30rpx;
-  background-size: 16.656rpx 27rpx;
-  display: inline-block;
-  height: 36rpx;
-  font-size: 33rpx;
-  line-height: 36rpx;
 }
 
 .a-coupon {

@@ -1,19 +1,19 @@
 // 以下是业务服务器API地址
-// 本机开发时使用
-var WxApiRoot = 'http://localhost:8080/wx/';
-// 局域网测试使用
-// var WxApiRoot = 'http://192.168.1.3:8080/wx/';
-// 云平台部署时使用
-// var WxApiRoot = 'http://122.51.199.160:8080/wx/';
+// 本机开发 / 模拟器 /「真机调试」使用（真机调试会走电脑代理，localhost 可用）
+// var WxApiRoot = 'http://localhost:8080/wx/';
+// var WxApiRoot = 'http://10.10.101.51:8080/wx/';
+// 仅「预览」扫码时使用：手机直连电脑，须改成局域网 IP（ipconfig 查看），且与电脑同一 WiFi
+// var WxApiRoot = 'http://10.10.101.51:8080/wx/';
+// 云平台 IP 调试（临时）
+// var WxApiRoot = 'http://129.211.210.86:8080/wx/';
+// 云平台 HTTPS 域名（真机 / 体验版）
+var WxApiRoot = 'https://bayoumu.cn/wx/';
 // 云平台上线时使用
 // var WxApiRoot = 'https://www.menethil.com.cn/wx/';
 
 module.exports = {
   IndexUrl: WxApiRoot + 'home/index', //首页数据接口
   AboutUrl: WxApiRoot + 'home/about', //介绍信息
-
-  CatalogList: WxApiRoot + 'catalog/index', //分类目录全部分类数据接口
-  CatalogCurrent: WxApiRoot + 'catalog/current', //分类目录当前分类数据接口
 
   AuthLoginByWeixin: WxApiRoot + 'auth/login_by_weixin', //微信登录
   AuthLoginByAccount: WxApiRoot + 'auth/login', //账号登录

@@ -12,7 +12,6 @@ Page({
     topics: [],
     groupons: [],
     banner: [],
-    channel: [],
     coupon: [],
     goodsCount: 0
   },
@@ -42,7 +41,6 @@ Page({
           topics: res.data.topicList,
           banner: res.data.banner,
           groupons: res.data.grouponList,
-          channel: res.data.channel,
           coupon: res.data.couponList
         });
       }
@@ -133,5 +131,20 @@ Page({
         util.showErrorToast(res.errmsg);
       }
     })
+  },
+  onImageError(e) {
+    var src = (e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.src) || '';
+    console.error('image load failed:', src, e.detail);
+    if (!this._imageErrorTips) {
+      this._imageErrorTips = 0;
+    }
+    if (this._imageErrorTips < 1) {
+      this._imageErrorTips += 1;
+      wx.showModal({
+        title: '图片加载失败',
+        content: '请点右上角 ··· → 打开调试 后重试。失败地址：' + src,
+        showCancel: false
+      });
+    }
   },
 })

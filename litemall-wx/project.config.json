@@ -42,7 +42,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "3.16.1",
-  "appid": "wx02b6a6438695bf92",
+  "appid": "wx91890c8b333142f5",
   "projectname": "litemall-wx",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
@@ -116,12 +116,6 @@
           "id": -1,
           "name": "新品首发",
           "pathName": "pages/newGoods/newGoods",
-          "query": ""
-        },
-        {
-          "id": -1,
-          "name": "分类",
-          "pathName": "pages/catalog/catalog",
           "query": ""
         },
         {
