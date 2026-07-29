@@ -132,6 +132,24 @@ Page({
       }
     })
   },
+  onBannerTap(e) {
+    var link = e.currentTarget.dataset.link || '';
+    if (!link) {
+      return;
+    }
+    if (/^https?:\/\//i.test(link)) {
+      wx.navigateTo({
+        url: '/pages/adImage/adImage?url=' + encodeURIComponent(link)
+      });
+      return;
+    }
+    var goodsId = parseInt(link, 10);
+    if (goodsId > 0) {
+      wx.navigateTo({
+        url: '/pages/goods/goods?id=' + goodsId
+      });
+    }
+  },
   onImageError(e) {
     var src = (e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.src) || '';
     console.error('image load failed:', src, e.detail);

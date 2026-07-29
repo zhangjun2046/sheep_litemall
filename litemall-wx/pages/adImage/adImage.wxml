@@ -1,0 +1,11 @@
+<scroll-view scroll-y="true" class="container">
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+    <image
+        class="poster"
+        src="{{imageUrl}}"
+        mode="widthFix"
+        bindload="onImageLoad"
+        binderror="onImageError"
+        data-src="{{imageUrl}}">
+    </image>
+</scroll-view>

@@ -1,0 +1,21 @@
+/* adImage.wxss */
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  font-size: 0;
+}
+
+.poster {
+  display: block;
+  width: 100%;
+}
+
+.loading {
+  width: 100%;
+  padding: 60rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}

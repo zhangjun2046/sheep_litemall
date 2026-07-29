@@ -32,6 +32,7 @@
     "pages/checkout/checkout",
     "pages/goods/goods",
     "pages/about/about",
+    "pages/adImage/adImage",
     "pages/groupon/myGroupon/myGroupon",
     "pages/groupon/grouponDetail/grouponDetail",
     "pages/groupon/grouponList/grouponList",
