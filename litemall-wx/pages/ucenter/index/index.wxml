@@ -35,7 +35,7 @@
         <image class='user_column_item_image' src='/static/images/comment.png'></image>
         <view class='user_column_item_text'>待评价</view>
       </view>
-      <view class='user_column_item' bindtap='goAfterSale'>
+      <view class='user_column_item' bindtap='goAfterSale' wx:if="{{enableAftersale}}">
         <image class='user_column_item_image' src='/static/images/aftersale.png'></image>
         <view class='user_column_item_text'>售后</view>
       </view>
@@ -49,7 +49,7 @@
   </view>
   <view class='user_column'>
 
-    <view class='user_column_item' bindtap='goCoupon'>
+    <view class='user_column_item' bindtap='goCoupon' wx:if="{{enableCoupon}}">
       <image class='user_column_item_image' src='/static/images/coupon.png'></image>
       <view class='user_column_item_text'>优惠卷</view>
     </view>
@@ -61,7 +61,7 @@
       <image class='user_column_item_image' src='/static/images/footprint.png'></image>
       <view class='user_column_item_text'>浏览足迹</view>
     </view>
-    <view class='user_column_item' bindtap='goGroupon'>
+    <view class='user_column_item' bindtap='goGroupon' wx:if="{{enableGroupon}}">
       <image class='user_column_item_image' src='/static/images/group.png'></image>
       <view class='user_column_item_text'>我的拼团</view>
     </view>

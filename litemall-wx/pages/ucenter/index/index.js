@@ -1,6 +1,7 @@
 var util = require('../../../utils/util.js');
 var api = require('../../../config/api.js');
 var user = require('../../../utils/user.js');
+var features = require('../../../config/features.js');
 var app = getApp();
 
 Page({
@@ -15,6 +16,9 @@ Page({
       unrecv: 0,
       uncomment: 0
     },
+    enableAftersale: features.enableAftersale,
+    enableCoupon: features.enableCoupon,
+    enableGroupon: features.enableGroupon,
     hasLogin: false
   },
   onLoad: function(options) {
