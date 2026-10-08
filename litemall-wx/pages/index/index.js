@@ -12,6 +12,7 @@ Page({
     topics: [],
     groupons: [],
     banner: [],
+    bannerHeight: 417,
     coupon: [],
     goodsCount: 0
   },
@@ -43,6 +44,7 @@ Page({
           groupons: res.data.grouponList,
           coupon: res.data.couponList
         });
+        that.updateBannerHeight(res.data.banner);
       }
     });
     util.request(api.GoodsCount).then(function (res) {
@@ -131,6 +133,26 @@ Page({
         util.showErrorToast(res.errmsg);
       }
     })
+  },
+  updateBannerHeight: function(banners) {
+    if (!banners || !banners.length || !banners[0].url) {
+      return;
+    }
+    var that = this;
+    var bannerWidth = 710;
+    wx.getImageInfo({
+      src: banners[0].url,
+      success: function(res) {
+        if (res.width > 0) {
+          that.setData({
+            bannerHeight: Math.round(bannerWidth * res.height / res.width)
+          });
+        }
+      },
+      fail: function(err) {
+        console.error('banner getImageInfo failed:', err);
+      }
+    });
   },
   onBannerTap(e) {
     var link = e.currentTarget.dataset.link || '';

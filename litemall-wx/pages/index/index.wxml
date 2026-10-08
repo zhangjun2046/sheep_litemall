@@ -6,17 +6,22 @@
             <text class="txt">商品搜索, 共{{goodsCount}}款好物</text>
         </navigator>
     </view>
-    <swiper class="banner" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+    <swiper class="banner" style="height: {{bannerHeight}}rpx" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
         <swiper-item wx:for="{{banner}}" wx:key="id">
-            <image src="{{item.url}}" mode="aspectFill" bindtap="onBannerTap" data-link="{{item.link}}" binderror="onImageError" data-src="{{item.url}}"></image>
+            <image src="{{item.url}}" mode="aspectFill" style="height: {{bannerHeight}}rpx" bindtap="onBannerTap" data-link="{{item.link}}" binderror="onImageError" data-src="{{item.url}}"></image>
         </swiper-item>
     </swiper>
     <view class="a-section a-popular" wx:if="{{hotGoods.length > 0}}">
         <view class="b">
             <view class="item" wx:for="{{hotGoods}}" wx:for-index="index" wx:for-item="item" wx:key="id">
-                <navigator url="/pages/goods/goods?id={{item.id}}">
+                <navigator url="/pages/goods/goods?id={{item.id}}" hover-class="none">
                     <image class="img" src="{{item.picUrl}}" mode="widthFix" binderror="onImageError" data-src="{{item.picUrl}}"></image>
-                    <text class="price">￥{{item.retailPrice}}</text>
+                    <view class="item-footer">
+                        <view class="price-box">
+                            <text class="price-symbol">￥</text>
+                            <text class="price-val">{{item.retailPrice}}</text>
+                        </view>
+                    </view>
                 </navigator>
             </view>
         </view>
