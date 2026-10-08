@@ -43,6 +43,16 @@ public class LitemallIssueService {
         return issueMapper.selectByExample(example);
     }
 
+    /**
+     * 查询全部未删除的常见问题（商品详情页使用），按 id 升序
+     */
+    public List<LitemallIssue> queryAll() {
+        LitemallIssueExample example = new LitemallIssueExample();
+        example.createCriteria().andDeletedEqualTo(false);
+        example.setOrderByClause("id asc");
+        return issueMapper.selectByExample(example);
+    }
+
     public int updateById(LitemallIssue issue) {
         issue.setUpdateTime(LocalDateTime.now());
         return issueMapper.updateByPrimaryKeySelective(issue);

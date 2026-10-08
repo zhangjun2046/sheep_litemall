@@ -43,3 +43,64 @@
 - 价格清晰呈现于卡片底部右侧，归属明确无歧义 ✅
 - 卡片间距紧凑统一（14rpx） ✅
 - 点击卡片可正常跳转至对应的商品详情页 ✅
+
+---
+
+# CodingPlan：微信小程序商品详情页「常见问题」取消 4 条硬约束
+
+> 使用 Deepseek-v4-pro 完成。
+
+## 一、需求背景
+
+后台（`litemall-admin` → 商场管理 → 通用问题，对应 `litemall_issue` 表）已录入 7 条常见问题，但在微信小程序商品详情页的「常见问题」区域仅展示 4 条，其余 3 条始终不显示。
+
+问题根因：商品详情接口在查询常见问题时把分页大小硬编码为 `4`，接口只返回前 4 条数据，前端只是原样渲染，因此后台录入的第 5 至 7 条永远不会下发。
+
+需求：取消 4 条硬约束，商品详情页按后台实际配置的条数展示全部常见问题，且页面风格保持统一。
+
+验收通过。
+
+## 二、实现方案
+
+1. **新增「查询全部常见问题」服务方法**（`litemall-db/src/main/java/org/linlinjava/litemall/db/service/LitemallIssueService.java`）：
+
+```java
+/**
+ * 查询全部未删除的常见问题（商品详情页使用），按 id 升序
+ */
+public List<LitemallIssue> queryAll() {
+    LitemallIssueExample example = new LitemallIssueExample();
+    example.createCriteria().andDeletedEqualTo(false);
+    example.setOrderByClause("id asc");
+    return issueMapper.selectByExample(example);
+}
+```
+
+该方法不分页（不调用 `PageHelper.startPage`），只取未删除记录并按 `id` 升序返回，与小程序原有默认展示顺序（1、2、3、4…）保持一致，避免魔法数字散落在控制层。
+
+2. **商品详情接口改用该方法**（`litemall-wx-api/src/main/java/org/linlinjava/litemall/wx/web/WxGoodsController.java`）：
+   - 将 `goodsIssueService.querySelective("", 1, 4, "", "")` 改为 `goodsIssueService.queryAll()`；
+   - 其余异步 `FutureTask`、`data.put("issue", ...)` 装配逻辑保持不变。
+
+3. **前端空数据保护**（`litemall-wx/pages/goods/goods.wxml`）：
+   - 在 `common-problem` 容器上增加 `wx:if="{{issueList.length > 0}}"`，后台未录入问题时不再只显示一个孤立标题；
+   - `goods.wxss` 中 `.common-problem` 原有「灰度分割线标题 + 红点 + 问题 + 缩进解答」样式保持不变，全部问题按同一套样式渲染，风格统一。
+
+## 三、涉及文件
+
+| 文件 | 改动说明 |
+| --- | --- |
+| `litemall-db/.../service/LitemallIssueService.java` | 新增 `queryAll()`，不分页查询全部未删除常见问题（按 id 升序） |
+| `litemall-wx-api/.../wx/web/WxGoodsController.java` | 商品详情接口由分页查询 4 条改为返回全部常见问题 |
+| `litemall-wx/pages/goods/goods.wxml` | `common-problem` 容器增加空数据判断，保持原有样式渲染全部条目 |
+| `docs/CodingPlan.md` | 记录本次取消 4 条硬约束的计划与实现 |
+| `README.md` | 更新近期改动说明 |
+
+## 四、验收标准
+
+进入微信小程序任意商品详情页：
+- 「常见问题」区域显示后台录入的全部问题（当前为 7 条：关于配送 / 关于发货 / 关于售后 / 关于发票 / 关于包装 / 关于重量 / 关于保存），不再固定为 4 条 ✅
+- 问题展示顺序与后台配置一致（按 id 升序） ✅
+- 页面样式与原有风格统一，未引入额外视觉改动 ✅
+- 后台未配置常见问题时，该区域整体隐藏，不残留标题 ✅
+- 后台管理端（`/admin/issue/*`）与小程序帮助中心（`/wx/issue/list`）等既有调用方不受影响 ✅

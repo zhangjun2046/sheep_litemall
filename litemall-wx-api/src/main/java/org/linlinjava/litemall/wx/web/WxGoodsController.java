@@ -103,8 +103,8 @@ public class WxGoodsController {
 		// 商品规格对应的数量和价格
 		Callable<List> productListCallable = () -> productService.queryByGid(id);
 
-		// 商品问题，这里是一些通用问题
-		Callable<List> issueCallable = () -> goodsIssueService.querySelective("", 1, 4, "", "");
+		// 商品问题，这里是一些通用问题（返回全部）
+		Callable<List> issueCallable = () -> goodsIssueService.queryAll();
 
 		// 商品品牌商
 		Callable<LitemallBrand> brandCallable = ()->{

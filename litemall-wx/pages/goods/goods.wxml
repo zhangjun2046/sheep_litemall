@@ -35,7 +35,6 @@
     <view class="c">
       <text class="desc">{{goods.brief}}</text>
       <view class="price">
-        <view class="counterPrice">原价：￥{{goods.counterPrice}}</view>
         <view class="retailPrice">现价：￥{{checkedSpecPrice}}</view>
       </view>
 
@@ -97,7 +96,7 @@
     <template is="wxParse" data="{{wxParseData:goodsDetail.nodes}}" />
   </view>
 
-  <view class="common-problem">
+  <view class="common-problem" wx:if="{{issueList.length > 0}}">
     <view class="h">
       <view class="line"></view>
       <text class="title">常见问题</text>
