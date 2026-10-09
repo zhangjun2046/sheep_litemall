@@ -17,8 +17,6 @@ public class AdminWebSessionManager extends DefaultWebSessionManager {
 
     public AdminWebSessionManager() {
         super();
-        setGlobalSessionTimeout(MILLIS_PER_HOUR * 6);
-//        setSessionIdCookieEnabled(false);
         setSessionIdUrlRewritingEnabled(false);
     }
 

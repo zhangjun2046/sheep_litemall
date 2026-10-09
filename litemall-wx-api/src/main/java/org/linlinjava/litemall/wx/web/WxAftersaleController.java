@@ -3,6 +3,7 @@ package org.linlinjava.litemall.wx.web;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.linlinjava.litemall.core.notify.NotifyService;
 import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.core.validator.Order;
 import org.linlinjava.litemall.core.validator.Sort;
@@ -42,6 +43,8 @@ public class WxAftersaleController {
     private LitemallOrderService orderService;
     @Autowired
     private LitemallOrderGoodsService orderGoodsService;
+    @Autowired
+    private NotifyService notifyService;
 
     /**
      * 售后列表
@@ -156,6 +159,7 @@ public class WxAftersaleController {
 
         // 订单的aftersale_status和售后记录的status是一致的。
         orderService.updateAftersaleStatus(orderId, AftersaleConstant.STATUS_REQUEST);
+        notifyService.notifyRefundApplyToOperators(order.getOrderSn());
         return ResponseUtil.ok();
     }
 

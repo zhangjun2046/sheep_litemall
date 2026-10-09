@@ -10,6 +10,7 @@
 
 ## 本仓库近期改动
 
+* 支付成功短信通知运营（yml 多手机号）、Admin 发货/退款短信通知收货人；关闭邮件与登录验证码短信
 * 使用Deepseek-v4-pro，完成微信小程序-商品详情页-常见问题显示的条数取消4条硬约束，按照后台配置的条数显示
 * 使用Gemini3.8 Flash完成微信小程序首页商品区域卡片对标设计稿调优，实现微信小程序首页增加独立卡片流、卡片底栏增加间距、卡片左右侧阴影加深
 * 使用deepseek-v4-pro，隐藏微信小程序“我的”页签即“个人中心”页面，隐藏“售后”、“优惠卷”、“我的拼团”三个功能入口
@@ -74,6 +75,36 @@ npm run dev
 
 本地微信登录可将 `litemall.wx.mock-enabled` 设为 `true`（见 `litemall-core/src/main/resources/application-core.yml`）；上线前改为 `false`，并配置真实 `app-id` / `app-secret`。
 
+## 生产打包（合一 jar，管理端走站点根路径）
+
+本地 `npm run dev`（9527）只给开发用。线上若用 `java -jar litemall.jar` 打开站点根路径当管理后台，必须先编译 admin 静态页再打 jar，否则根路径是 Spring Whitelabel。
+
+建议 Node 18。管理端接口基址打成同源 `/admin`（适合 `https://bayoumu.cn/` 这类前后端同域）：
+
+```bash
+cd litemall-admin
+npm install --legacy-peer-deps   # 已安装可跳过
+VUE_APP_BASE_API=/admin npm run build:dep
+
+cd ..
+mvn -pl litemall-all -am clean package -DskipTests
+```
+
+产物：`litemall-all/target/litemall-all-0.1.0-exec.jar`。部署时改名为服务器上的 `litemall.jar` 后重启。
+
+和「快速启动」里只 `mvn clean package` 的差别：后者不编译 `litemall-admin/dist`，jar 里没有管理端页面；本次会把 `dist` 拷进 jar 的 `static/`。`build:dep` 默认会写入仓库里的示例 API 地址，所以打包时用环境变量覆盖为 `/admin`。微信小程序仍是独立工程，不打进这个 jar。
+
+证书需放在服务器 `litemall.wx.key-path`（当前为 `/opt/litemall/certs/apiclient_cert.p12`）。
+
+### 配置哪个 yml 生效
+
+Spring Boot 优先级：**jar 同目录（或 `./config/`）的 `application.yml` > jar 内配置**。同名项以服务器文件为准。
+
+- 服务器 yml 若含 `spring.profiles.active: none`（`deploy/litemall/application.yml` 即如此），则 **不会加载** jar 里的 `application-core.yml`，支付/短信全部看服务器这份。
+- 若仍激活 `core` 等 profile，两边会合并，但外部文件里写过的键覆盖 jar 内值。
+
+因此服务器目录下那份 `enable: false`、模板「待补充」会盖掉 `application-core.yml` 里已填的短信/支付。线上改短信或支付，改服务器 yml 后重启；不要以为只改仓库里的 `application-core.yml` 就会在现网生效。
+启动命令 nohup java -Dfile.encoding=UTF-8 -jar litemall.jar > log.log 2>&1 &
 ## 警告
 
 1. 本项目主要用于学习与业务实践

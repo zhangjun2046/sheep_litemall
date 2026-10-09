@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.linlinjava.litemall.core.config.AuthProperties;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -30,8 +32,7 @@ public class JwtHelper {
 		    Algorithm algorithm = Algorithm.HMAC256(SECRET);
 		    Map<String, Object> map = new HashMap<String, Object>();
 		    Date nowDate = new Date();
-		    // 过期时间：2小时
-		    Date expireDate = getAfterDate(nowDate,0,0,0,2,0,0);
+		    Date expireDate = getAfterDate(nowDate, 0, 0, 0, AuthProperties.resolveWxTokenExpireHours(), 0, 0);
 	        map.put("alg", "HS256");
 	        map.put("typ", "JWT");
 		    String token = JWT.create()

@@ -220,11 +220,9 @@ public class AdminAftersaleController {
             }
         }
 
-        // 发送短信通知，这里采用异步发送
-        // 退款成功通知用户, 例如“您申请的订单退款 [ 单号:{1} ] 已成功，请耐心等待到账。”
-        // TODO 注意订单号只发后6位
+        // 售后退款成功通知收货人（退款金额），失败不阻断退款
         notifyService.notifySmsTemplate(order.getMobile(), NotifyType.REFUND,
-                new String[]{order.getOrderSn().substring(8, 14)});
+                new String[]{NotifyService.formatAmount(aftersaleOne.getAmount())});
 
         logHelper.logOrderSucceed("退款", "订单编号 " + order.getOrderSn() + " 售后编号 " + aftersale.getAftersaleSn());
         return ResponseUtil.ok();

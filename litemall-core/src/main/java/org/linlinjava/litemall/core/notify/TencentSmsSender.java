@@ -54,7 +54,7 @@ public class TencentSmsSender implements SmsSender {
             smsResult.setSuccessful(true);
             smsResult.setResult(result);
             return smsResult;
-        } catch (HTTPException | IOException e) {
+        } catch (HTTPException | IOException | RuntimeException e) {
             logger.error(e.getMessage(), e);
         }
 

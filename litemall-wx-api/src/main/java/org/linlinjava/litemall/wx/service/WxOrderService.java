@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.linlinjava.litemall.core.express.ExpressService;
 import org.linlinjava.litemall.core.express.dao.ExpressInfo;
 import org.linlinjava.litemall.core.notify.NotifyService;
-import org.linlinjava.litemall.core.notify.NotifyType;
 import org.linlinjava.litemall.core.qcode.QCodeService;
 import org.linlinjava.litemall.core.system.SystemConfig;
 import org.linlinjava.litemall.core.task.TaskService;
@@ -510,11 +509,8 @@ public class WxOrderService {
                 }
             }
 
-            //TODO 发送邮件和短信通知，这里采用异步发送
-            // 订单支付成功以后，会发送短信给用户，以及发送邮件给管理员
-            notifyService.notifyMail("新订单通知", order.toString());
-            // 这里微信的短信平台对参数长度有限制，所以将订单号只截取后6位
-            notifyService.notifySmsTemplateSync(order.getMobile(), NotifyType.PAY_SUCCEED, new String[]{order.getOrderSn().substring(8, 14)});
+            // 支付成功：短信通知运营（订单号后6位），失败不阻断下单
+            notifyService.notifyPaidOrderToOperators(order.getOrderSn());
         }
         else {
             // 订单支付超期任务
@@ -810,11 +806,8 @@ public class WxOrderService {
             }
         }
 
-        //TODO 发送邮件和短信通知，这里采用异步发送
-        // 订单支付成功以后，会发送短信给用户，以及发送邮件给管理员
-        notifyService.notifyMail("新订单通知", order.toString());
-        // 这里微信的短信平台对参数长度有限制，所以将订单号只截取后6位
-        notifyService.notifySmsTemplateSync(order.getMobile(), NotifyType.PAY_SUCCEED, new String[]{orderSn.substring(8, 14)});
+        // 支付成功：短信通知运营（订单号后6位），失败不阻断支付回调
+        notifyService.notifyPaidOrderToOperators(order.getOrderSn());
 
         // 取消订单超时未支付任务
         taskService.removeTask(new OrderUnpaidTask(order.getId()));
@@ -860,10 +853,7 @@ public class WxOrderService {
             return ResponseUtil.updatedDateExpired();
         }
 
-        //TODO 发送邮件和短信通知，这里采用异步发送
-        // 有用户申请退款，邮件通知运营人员
-        notifyService.notifyMail("退款申请", order.toString());
-
+        notifyService.notifyRefundApplyToOperators(order.getOrderSn());
         return ResponseUtil.ok();
     }
 

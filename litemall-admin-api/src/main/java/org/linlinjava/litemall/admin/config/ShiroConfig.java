@@ -8,6 +8,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.linlinjava.litemall.admin.shiro.AdminAuthorizingRealm;
 import org.linlinjava.litemall.admin.shiro.AdminWebSessionManager;
+import org.linlinjava.litemall.core.config.AuthProperties;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,16 +46,21 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SessionManager sessionManager() {
-
-        return new AdminWebSessionManager();
+    public SessionManager sessionManager(AuthProperties authProperties) {
+        AdminWebSessionManager sessionManager = new AdminWebSessionManager();
+        int hours = authProperties.getAdminSessionTimeoutHours();
+        if (hours <= 0) {
+            hours = AuthProperties.resolveAdminSessionTimeoutHours();
+        }
+        sessionManager.setGlobalSessionTimeout(3600_000L * hours);
+        return sessionManager;
     }
 
     @Bean
-    public DefaultWebSecurityManager defaultWebSecurityManager() {
+    public DefaultWebSecurityManager defaultWebSecurityManager(SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(realm());
-        securityManager.setSessionManager(sessionManager());
+        securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
 

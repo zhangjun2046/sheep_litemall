@@ -96,6 +96,10 @@ public class NotifyProperties {
         private boolean enable;
         private String active;
         private String sign;
+        /**
+         * 支付成功通知运营的手机号，多个用英文逗号分隔
+         */
+        private String operatorMobiles;
         private Tencent tencent;
         private Aliyun aliyun;
         private List<Map<String, String>> template = new ArrayList<>();
@@ -132,6 +136,14 @@ public class NotifyProperties {
             this.sign = sign;
         }
 
+        public String getOperatorMobiles() {
+            return operatorMobiles;
+        }
+
+        public void setOperatorMobiles(String operatorMobiles) {
+            this.operatorMobiles = operatorMobiles;
+        }
+
         public Tencent getTencent() {
             return tencent;
         }
@@ -149,14 +161,14 @@ public class NotifyProperties {
         }
 
         public static class Tencent {
-            private int appid;
+            private String appid;
             private String appkey;
 
-            public int getAppid() {
+            public String getAppid() {
                 return appid;
             }
 
-            public void setAppid(int appid) {
+            public void setAppid(String appid) {
                 this.appid = appid;
             }
 

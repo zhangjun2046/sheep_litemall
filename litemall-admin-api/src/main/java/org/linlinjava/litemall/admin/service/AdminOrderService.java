@@ -171,11 +171,9 @@ public class AdminOrderService {
             couponUserService.update(couponUser);
         }
 
-        //TODO 发送邮件和短信通知，这里采用异步发送
-        // 退款成功通知用户, 例如“您申请的订单退款 [ 单号:{1} ] 已成功，请耐心等待到账。”
-        // 注意订单号只发后6位
+        // 退款成功通知收货人（退款金额），失败不阻断退款
         notifyService.notifySmsTemplate(order.getMobile(), NotifyType.REFUND,
-                new String[]{order.getOrderSn().substring(8, 14)});
+                new String[]{NotifyService.formatAmount(order.getActualPrice())});
 
         logHelper.logOrderSucceed("退款", "订单编号 " + order.getOrderSn());
         return ResponseUtil.ok();
@@ -217,10 +215,8 @@ public class AdminOrderService {
             return ResponseUtil.updatedDateExpired();
         }
 
-        //TODO 发送邮件和短信通知，这里采用异步发送
-        // 发货会发送通知短信给用户:          *
-        // "您的订单已经发货，快递公司 {1}，快递单 {2} ，请注意查收"
-        notifyService.notifySmsTemplate(order.getMobile(), NotifyType.SHIP, new String[]{shipChannel, shipSn});
+        // 发货通知收货人：完整快递单号，失败不阻断发货
+        notifyService.notifySmsTemplate(order.getMobile(), NotifyType.SHIP, new String[]{shipSn});
 
         logHelper.logOrderSucceed("发货", "订单编号 " + order.getOrderSn());
         return ResponseUtil.ok();

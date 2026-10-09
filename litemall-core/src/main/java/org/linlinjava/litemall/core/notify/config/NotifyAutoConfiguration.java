@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
@@ -34,6 +36,7 @@ public class NotifyAutoConfiguration {
         }
 
         NotifyProperties.Sms smsConfig = properties.getSms();
+        notifyService.setOperatorMobiles(parseOperatorMobiles(smsConfig.getOperatorMobiles()));
         if (smsConfig.isEnable()) {
             if(smsConfig.getActive().equals("tencent")) {
                 notifyService.setSmsSender(tencentSmsSender());
@@ -68,11 +71,37 @@ public class NotifyAutoConfiguration {
         return mailSender;
     }
 
+    private List<String> parseOperatorMobiles(String operatorMobiles) {
+        List<String> mobiles = new ArrayList<>();
+        if (operatorMobiles == null || operatorMobiles.trim().isEmpty()) {
+            return mobiles;
+        }
+        for (String part : operatorMobiles.split(",")) {
+            if (part == null) {
+                continue;
+            }
+            String mobile = part.trim();
+            if (mobile.isEmpty() || "待补充".equals(mobile) || !mobile.matches("\\d+")) {
+                continue;
+            }
+            mobiles.add(mobile);
+        }
+        return mobiles;
+    }
+
     public TencentSmsSender tencentSmsSender() {
         NotifyProperties.Sms smsConfig = properties.getSms();
         TencentSmsSender smsSender = new TencentSmsSender();
         NotifyProperties.Sms.Tencent tencent = smsConfig.getTencent();
-        smsSender.setSender(new SmsSingleSender(tencent.getAppid(), tencent.getAppkey()));
+        int appid = 0;
+        try {
+            if (tencent.getAppid() != null) {
+                appid = Integer.parseInt(tencent.getAppid().trim());
+            }
+        } catch (NumberFormatException ignored) {
+            // yml 未填写有效 SDK AppID 时保持 0，发送阶段会失败但不影响启动
+        }
+        smsSender.setSender(new SmsSingleSender(appid, tencent.getAppkey()));
         smsSender.setSign(smsConfig.getSign());
         return smsSender;
     }
