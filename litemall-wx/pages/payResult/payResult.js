@@ -34,9 +34,20 @@ Page({
     util.request(api.OrderPrepay, {
       orderId: that.data.orderId
     }, 'POST').then(function(res) {
+      util.logWxPay('prepay 返回', {
+        errno: res.errno,
+        errmsg: res.errmsg,
+        orderId: that.data.orderId,
+        orderSn: res.data && res.data.orderSn,
+        outTradeNo: res.data && res.data.outTradeNo,
+        packageValue: res.data && res.data.packageValue,
+        signType: res.data && res.data.signType,
+        timeStamp: res.data && res.data.timeStamp
+      });
       if (res.errno === 0) {
         const payParam = res.data;
-        console.log("支付过程开始")
+        const payOrderSn = payParam.orderSn;
+        util.logWxPay('支付过程开始', { orderId: that.data.orderId, orderSn: payOrderSn });
         wx.requestPayment({
           'timeStamp': payParam.timeStamp,
           'nonceStr': payParam.nonceStr,
@@ -44,19 +55,21 @@ Page({
           'signType': payParam.signType,
           'paySign': payParam.paySign,
           'success': function(res) {
-            console.log("支付过程成功")
+            util.logWxPay('支付过程成功', res);
             that.setData({
               status: true
             });
           },
           'fail': function(res) {
-            console.log("支付过程失败")
-            util.showErrorToast('支付失败');
+            util.showPayFail(res, null, { orderSn: payOrderSn });
           },
           'complete': function(res) {
-            console.log("支付过程结束")
+            util.logWxPay('支付过程结束', res);
           }
         });
+      } else {
+        util.logWxPay('prepay 失败，跳过 requestPayment', res);
+        util.showErrorToast(res.errmsg || '支付失败');
       }
     });
   }

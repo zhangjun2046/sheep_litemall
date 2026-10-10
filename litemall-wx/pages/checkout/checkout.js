@@ -185,8 +185,10 @@ Page({
         }
 
         const orderId = res.data.orderId;
+        const orderSn = res.data.orderSn;
         const grouponLinkId = res.data.grouponLinkId;
         const payed = res.data.payed
+        util.logWxPay('submit 成功', { orderId: orderId, orderSn: orderSn, payed: payed });
         if (payed) {
           wx.redirectTo({
             url: '/pages/payResult/payResult?status=1&orderId=' + orderId
@@ -196,9 +198,20 @@ Page({
         util.request(api.OrderPrepay, {
           orderId: orderId
         }, 'POST').then(function(res) {
+          util.logWxPay('prepay 返回', {
+            errno: res.errno,
+            errmsg: res.errmsg,
+            orderId: orderId,
+            orderSn: (res.data && res.data.orderSn) || orderSn,
+            outTradeNo: res.data && res.data.outTradeNo,
+            packageValue: res.data && res.data.packageValue,
+            signType: res.data && res.data.signType,
+            timeStamp: res.data && res.data.timeStamp
+          });
           if (res.errno === 0) {
             const payParam = res.data;
-            console.log("支付过程开始");
+            const payOrderSn = payParam.orderSn || orderSn;
+            util.logWxPay('支付过程开始', { orderId: orderId, orderSn: payOrderSn });
             wx.requestPayment({
               'timeStamp': payParam.timeStamp,
               'nonceStr': payParam.nonceStr,
@@ -206,7 +219,7 @@ Page({
               'signType': payParam.signType,
               'paySign': payParam.paySign,
               'success': function(res) {
-                console.log("支付过程成功");
+                util.logWxPay('支付过程成功', res);
                 if (grouponLinkId) {
                   setTimeout(() => {
                     wx.redirectTo({
@@ -220,16 +233,18 @@ Page({
                 }
               },
               'fail': function(res) {
-                console.log("支付过程失败");
-                wx.redirectTo({
-                  url: '/pages/payResult/payResult?status=0&orderId=' + orderId
-                });
+                util.showPayFail(res, function() {
+                  wx.redirectTo({
+                    url: '/pages/payResult/payResult?status=0&orderId=' + orderId
+                  });
+                }, { orderSn: payOrderSn });
               },
               'complete': function(res) {
-                console.log("支付过程结束")
+                util.logWxPay('支付过程结束', res);
               }
             });
           } else {
+            util.logWxPay('prepay 失败，跳过 requestPayment', res);
             wx.redirectTo({
               url: '/pages/payResult/payResult?status=0&orderId=' + orderId
             });

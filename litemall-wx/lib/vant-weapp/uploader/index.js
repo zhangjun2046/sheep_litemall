@@ -72,29 +72,15 @@ VantComponent({
                 return;
             const { name = '', capture = ['album', 'camera'], maxCount = 100, multiple = false, maxSize, accept, lists, useBeforeRead = false // 是否定义了 beforeRead
              } = this.data;
-            let chooseFile = null;
             const newMaxCount = maxCount - lists.length;
-            // 设置为只选择图片的时候使用 chooseImage 来实现
-            if (accept === 'image') {
-                chooseFile = new Promise((resolve, reject) => {
-                    wx.chooseImage({
-                        count: multiple ? (newMaxCount > 9 ? 9 : newMaxCount) : 1,
-                        sourceType: capture,
-                        success: resolve,
-                        fail: reject
-                    });
+            const chooseFile = new Promise((resolve, reject) => {
+                wx.chooseImage({
+                    count: multiple ? (newMaxCount > 9 ? 9 : newMaxCount) : 1,
+                    sourceType: capture,
+                    success: resolve,
+                    fail: reject
                 });
-            }
-            else {
-                chooseFile = new Promise((resolve, reject) => {
-                    wx.chooseMessageFile({
-                        count: multiple ? newMaxCount : 1,
-                        type: 'file',
-                        success: resolve,
-                        fail: reject
-                    });
-                });
-            }
+            });
             chooseFile.then((res) => {
                 const file = multiple ? res.tempFiles : res.tempFiles[0];
                 // 检查文件大小

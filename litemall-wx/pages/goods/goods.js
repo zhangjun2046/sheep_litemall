@@ -30,8 +30,7 @@ Page({
     collect: false,
     shareImage: '',
     isGroupon: false, //标识是否是一个参团购买
-    soldout: false,
-    canWrite: false, //用户是否获取了保存相册的权限
+    soldout: false
   },
 
   // 页面分享
@@ -54,59 +53,82 @@ Page({
       return false;
     }
   },
-  handleSetting: function(e) {
-      var that = this;
-      // console.log(e)
-      if (!e.detail.authSetting['scope.writePhotosAlbum']) {
-          wx.showModal({
-              title: '警告',
-              content: '不授权无法保存',
-              showCancel: false
-          })
-          that.setData({
-              canWrite: false
-          })
-      } else {
-          wx.showToast({
-              title: '保存成功'
-          })
-          that.setData({
-              canWrite: true
-          })
+  ensureAlbumAuth: function(onGranted) {
+    wx.getSetting({
+      success: function(res) {
+        if (res.authSetting['scope.writePhotosAlbum']) {
+          onGranted();
+          return;
+        }
+        wx.authorize({
+          scope: 'scope.writePhotosAlbum',
+          success: function() {
+            onGranted();
+          },
+          fail: function() {
+            wx.showModal({
+              title: '需要相册权限',
+              content: '保存海报到相册需要授权，请在设置中打开。',
+              confirmText: '去设置',
+              success: function(modalRes) {
+                if (!modalRes.confirm) {
+                  return;
+                }
+                wx.openSetting({
+                  success: function(settingRes) {
+                    if (settingRes.authSetting['scope.writePhotosAlbum']) {
+                      onGranted();
+                    }
+                  }
+                });
+              }
+            });
+          }
+        });
       }
+    });
   },
-  // 保存分享图
+  // 保存分享图（点击后再申请相册权限）
   saveShare: function() {
     let that = this;
-    wx.downloadFile({
-      url: that.data.shareImage,
-      success: function(res) {
-        console.log(res)
-        wx.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          success: function(res) {
-            wx.showModal({
-              title: '生成海报成功',
-              content: '海报已成功保存到相册，可以分享到朋友圈了',
-              showCancel: false,
-              confirmText: '好的',
-              confirmColor: '#a78845',
-              success: function(res) {
-                if (res.confirm) {
-                  console.log('用户点击确定');
-                }
-              }
-            })
-          },
-          fail: function(res) {
-            console.log('fail')
-          }
-        })
-      },
-      fail: function() {
-        console.log('fail')
-      }
-    })
+    if (!that.data.shareImage) {
+      wx.showToast({
+        title: '海报未生成',
+        icon: 'none'
+      });
+      return;
+    }
+    that.ensureAlbumAuth(function() {
+      wx.downloadFile({
+        url: that.data.shareImage,
+        success: function(res) {
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success: function() {
+              wx.showModal({
+                title: '生成海报成功',
+                content: '海报已成功保存到相册，可以分享到朋友圈了',
+                showCancel: false,
+                confirmText: '好的',
+                confirmColor: '#a78845'
+              });
+            },
+            fail: function() {
+              wx.showToast({
+                title: '保存失败',
+                icon: 'none'
+              });
+            }
+          });
+        },
+        fail: function() {
+          wx.showToast({
+            title: '海报下载失败',
+            icon: 'none'
+          });
+        }
+      });
+    });
   },
 
   //从分享的团购进入
@@ -429,32 +451,6 @@ Page({
       });
       this.getGrouponInfo(options.grouponId);
     }
-    let that = this;
-    wx.getSetting({
-        success: function (res) {
-            console.log(res)
-            //不存在相册授权
-            if (!res.authSetting['scope.writePhotosAlbum']) {
-                wx.authorize({
-                    scope: 'scope.writePhotosAlbum',
-                    success: function () {
-                        that.setData({
-                            canWrite: true
-                        })
-                    },
-                    fail: function (err) {
-                        that.setData({
-                            canWrite: false
-                        })
-                    }
-                })
-            } else {
-                that.setData({
-                    canWrite: true
-                });
-            }
-        }
-    })
   },
   onShow: function() {
     // 页面显示

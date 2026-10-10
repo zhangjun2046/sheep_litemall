@@ -519,6 +519,7 @@ public class WxOrderService {
 
         Map<String, Object> data = new HashMap<>();
         data.put("orderId", orderId);
+        data.put("orderSn", order.getOrderSn());
         data.put("payed", payed);
         if (grouponRulesId != null && grouponRulesId > 0) {
             data.put("grouponLinkId", grouponLinkId);
@@ -628,31 +629,55 @@ public class WxOrderService {
         LitemallUser user = userService.findById(userId);
         String openid = user.getWeixinOpenid();
         if (openid == null) {
+            logger.error("预支付失败：openid 为空 userId=" + userId + " orderId=" + orderId);
             return ResponseUtil.fail(AUTH_OPENID_UNACCESS, "订单不能支付");
         }
         WxPayMpOrderResult result = null;
+        int fee = 0;
         try {
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
             orderRequest.setOutTradeNo(order.getOrderSn());
             orderRequest.setOpenid(openid);
             orderRequest.setBody("订单：" + order.getOrderSn());
             // 元转成分
-            int fee = 0;
             BigDecimal actualPrice = order.getActualPrice();
             fee = actualPrice.multiply(new BigDecimal(100)).intValue();
             orderRequest.setTotalFee(fee);
             orderRequest.setSpbillCreateIp(IpUtil.getIpAddr(request));
 
+            logger.info("微信预支付请求 orderId=" + orderId + " orderSn=" + order.getOrderSn()
+                    + " feeFen=" + fee + " openidTail=" + maskOpenid(openid)
+                    + " clientIp=" + orderRequest.getSpbillCreateIp());
             result = wxPayService.createOrder(orderRequest);
+            logger.info("微信预支付成功 orderId=" + orderId + " orderSn=" + order.getOrderSn()
+                    + " outTradeNo=" + order.getOrderSn()
+                    + " package=" + result.getPackageValue() + " signType=" + result.getSignType());
+        } catch (WxPayException e) {
+            logger.error("微信预支付失败 orderId=" + orderId + " orderSn=" + order.getOrderSn()
+                    + " feeFen=" + fee + " openidTail=" + maskOpenid(openid)
+                    + " returnCode=" + e.getReturnCode() + " returnMsg=" + e.getReturnMsg()
+                    + " errCode=" + e.getErrCode() + " errCodeDes=" + e.getErrCodeDes(), e);
+            return ResponseUtil.fail(ORDER_PAY_FAIL, "订单不能支付");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("微信预支付异常 orderId=" + orderId + " orderSn=" + order.getOrderSn()
+                    + " feeFen=" + fee + " openidTail=" + maskOpenid(openid), e);
             return ResponseUtil.fail(ORDER_PAY_FAIL, "订单不能支付");
         }
 
         if (orderService.updateWithOptimisticLocker(order) == 0) {
             return ResponseUtil.updatedDateExpired();
         }
-        return ResponseUtil.ok(result);
+        Map<String, Object> data = new HashMap<>();
+        data.put("appId", result.getAppId());
+        data.put("timeStamp", result.getTimeStamp());
+        data.put("nonceStr", result.getNonceStr());
+        data.put("packageValue", result.getPackageValue());
+        data.put("signType", result.getSignType());
+        data.put("paySign", result.getPaySign());
+        data.put("orderId", orderId);
+        data.put("orderSn", order.getOrderSn());
+        data.put("outTradeNo", order.getOrderSn());
+        return ResponseUtil.ok(data);
     }
 
     /**
@@ -1058,5 +1083,15 @@ public class WxOrderService {
             couponUser.setUpdateTime(LocalDateTime.now());
             couponUserService.update(couponUser);
         }
+    }
+
+    private String maskOpenid(String openid) {
+        if (openid == null || openid.isEmpty()) {
+            return "";
+        }
+        if (openid.length() <= 6) {
+            return openid;
+        }
+        return openid.substring(openid.length() - 6);
     }
 }

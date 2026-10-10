@@ -115,9 +115,50 @@ function showErrorToast(msg) {
   })
 }
 
+function stringifyPayLog(detail) {
+  if (detail === undefined) {
+    return '';
+  }
+  try {
+    return JSON.stringify(detail);
+  } catch (e) {
+    return String(detail);
+  }
+}
+
+function logWxPay(step, detail) {
+  console.log('[wxpay]', step, stringifyPayLog(detail));
+  if (detail && detail.orderSn) {
+    console.log('[wxpay] 商品订单号(可复制)=' + detail.orderSn);
+  }
+}
+
+function showPayFail(res, afterClose, extra) {
+  var errMsg = (res && (res.errMsg || res.errmsg)) || '支付失败';
+  var errCode = res && (res.errCode !== undefined ? res.errCode : res.errno);
+  var orderSn = extra && extra.orderSn;
+  logWxPay('requestPayment fail', Object.assign({ orderSn: orderSn }, res || {}));
+  var content = (errCode !== undefined && errCode !== null ? ('errCode=' + errCode + '\n') : '') + errMsg;
+  if (orderSn) {
+    content += '\n商品订单号=' + orderSn;
+  }
+  wx.showModal({
+    title: '支付失败',
+    content: content,
+    showCancel: false,
+    complete: function() {
+      if (typeof afterClose === 'function') {
+        afterClose();
+      }
+    }
+  });
+}
+
 module.exports = {
   formatTime,
   request,
   redirect,
-  showErrorToast
+  showErrorToast,
+  logWxPay,
+  showPayFail
 }
