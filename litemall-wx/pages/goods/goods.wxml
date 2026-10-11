@@ -35,7 +35,10 @@
     <view class="c">
       <text class="desc">{{goods.brief}}</text>
       <view class="price">
-        <view class="retailPrice">现价：￥{{checkedSpecPrice}}</view>
+        <view class="retailPrice">
+          <text class="price-symbol">￥</text>
+          <text class="price-val">{{checkedSpecPrice}}</text>
+        </view>
       </view>
 
       <view class="brand" wx:if="{{brand.name}}">
