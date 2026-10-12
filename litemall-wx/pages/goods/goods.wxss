@@ -38,7 +38,7 @@
 
 .goods-info {
   width: 750rpx;
-  height: 306rpx;
+  height: auto;
   overflow: hidden;
   background: #fff;
 }
@@ -46,9 +46,9 @@
 .goods-info .c {
   display: block;
   width: 718.75rpx;
-  height: 100%;
+  height: auto;
   margin-left: 31.25rpx;
-  padding: 38rpx 31.25rpx 38rpx 0;
+  padding: 8rpx 31.25rpx 30rpx 0;
   border-bottom: 1px solid #f4f4f4;
 }
 
@@ -59,30 +59,34 @@
 }
 
 .goods_name {
-  height: 86rpx;
-  line-height: 86rpx;
-  border-bottom: 1px solid #fafafa;
+  background: #ffffff;
+  min-height: 86rpx;
+  height: auto;
+  line-height: 1.4;
+  padding: 24rpx 0 8rpx 0;
+  border-bottom: none;
 }
 
 .goods_name_left {
   float: left;
-  height: 86rpx;
-  font-weight: 550;
-  line-height: 86rpx;
-  margin-left: 35rpx;
+  min-height: 54rpx;
+  max-width: 540rpx;
+  font-weight: 600;
+  line-height: 54rpx;
+  margin-left: 31.25rpx;
   font-size: 38rpx;
+  color: #222222;
   letter-spacing: 1rpx;
 }
 
 .goods_name_right {
   float: right;
   font-weight: 550;
-  margin-top: 28rpx;
+  margin-top: 14rpx;
   width: 140rpx;
   height: 80rpx;
   line-height: 82rpx;
   padding: 0;
-  margin: 0;
   margin-right: 0rpx;
   text-align: center;
   font-size: 25rpx;
@@ -96,16 +100,21 @@
 }
 
 .goods-info .desc {
-  height: 43rpx;
-  margin-bottom: 41rpx;
-  font-size: 24rpx;
-  line-height: 36rpx;
-  color: #999;
+  height: auto;
+  min-height: 44rpx;
+  margin-bottom: 22rpx;
+  font-size: 30rpx;
+  line-height: 44rpx;
+  letter-spacing: 1rpx;
+  color: #777777;
 }
 
 .goods-info .price {
-  height: 70rpx;
-  align-content: center;
+  height: auto;
+  min-height: 56rpx;
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 16rpx;
 }
 
 .goods-info .counterPrice {
@@ -117,32 +126,57 @@
 }
 
 .goods-info .retailPrice {
-  padding-left: 5%;
-  font-size: 30rpx;
-  color: #a78845;
+  padding-left: 0;
+  display: flex;
+  align-items: baseline;
+  color: #d81e06;
+}
+
+.goods-info .retailPrice text {
+  display: inline-block;
+  width: auto;
+  text-align: left;
+}
+
+.goods-info .retailPrice .price-symbol {
+  font-size: 28rpx;
+  color: #d81e06;
+  font-weight: bold;
+  line-height: 1;
+  margin-left: 0;
+}
+
+.goods-info .retailPrice .price-val {
+  font-size: 44rpx;
+  color: #d81e06;
+  font-weight: bold;
+  font-family: "DIN Alternate", -apple-system, sans-serif;
+  line-height: 1;
+  margin-left: 6rpx;
 }
 
 .goods-info .brand {
-  margin-top: 23rpx;
-  min-height: 40rpx;
+  margin-top: 16rpx;
+  min-height: 48rpx;
   text-align: left;
 }
 
 .goods-info .brand text {
   display: inline-block;
   width: auto;
-  padding: 2px 30rpx 2px 10.5rpx;
-  line-height: 35.5rpx;
-  border: 1px solid #f48f18;
+  padding: 6rpx 22rpx;
+  line-height: 34rpx;
+  background: #FFF1E8;
+  border: 1rpx solid #FCD8C1;
   font-size: 25rpx;
-  color: #f48f18;
-  border-radius: 4rpx;
-  background-size: 10.75rpx 18.75rpx;
+  font-weight: 500;
+  color: #DE6526;
+  border-radius: 999rpx;
 }
 
 .section-nav {
   width: 750rpx;
-  height: 108rpx;
+  height: 88rpx;
   background: #fff;
   margin-bottom: 20rpx;
 }
@@ -150,10 +184,11 @@
 .section-nav .t {
   float: left;
   width: 600rpx;
-  height: 108rpx;
-  line-height: 108rpx;
-  font-size: 29rpx;
-  color: #333;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222222;
   margin-left: 31.25rpx;
 }
 
@@ -162,7 +197,8 @@
   width: 52rpx;
   height: 52rpx;
   margin-right: 16rpx;
-  margin-top: 28rpx;
+  margin-top: 18rpx;
+  color: #999999;
 }
 
 .section-act .t {
@@ -353,39 +389,54 @@
 
 .goods-attr .t {
   width: 687.5rpx;
-  height: 104rpx;
-  line-height: 104rpx;
-  font-size: 38.5rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222222;
+}
+
+.goods-attr .l {
+  width: 687.5rpx;
+  height: auto;
+  overflow: hidden;
 }
 
 .goods-attr .item {
   width: 687.5rpx;
-  height: 68rpx;
-  padding: 11rpx 20rpx;
-  margin-bottom: 11rpx;
-  background: #f7f7f7;
-  font-size: 38.5rpx;
+  height: auto;
+  min-height: 64rpx;
+  padding: 16rpx 12rpx;
+  margin-bottom: 0;
+  background: #ffffff;
+  border-bottom: 1rpx solid #F5F5F5;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.goods-attr .item:last-child {
+  border-bottom: none;
 }
 
 .goods-attr .left {
-  float: left;
-  font-size: 25rpx;
-  width: 134rpx;
-  height: 45rpx;
-  line-height: 45rpx;
+  font-size: 26rpx;
+  width: 160rpx;
+  line-height: 36rpx;
   overflow: hidden;
-  color: #999;
+  color: #888888;
+  flex-shrink: 0;
 }
 
 .goods-attr .right {
-  float: left;
-  font-size: 36.5rpx;
+  font-size: 26rpx;
+  font-weight: 500;
   margin-left: 20rpx;
-  width: 480rpx;
-  height: 45rpx;
-  line-height: 45rpx;
+  width: 490rpx;
+  line-height: 36rpx;
   overflow: hidden;
-  color: #333;
+  color: #262626;
+  flex-grow: 1;
 }
 
 .detail {
