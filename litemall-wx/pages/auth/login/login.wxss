@@ -8,54 +8,71 @@
 }
 
 .wx-login-btn {
-  margin: 60rpx 0 40rpx 0;
+  margin: 60rpx 5% 40rpx;
+  width: 90%;
   height: 96rpx;
   line-height: 96rpx;
+  padding: 0;
   font-size: 30rpx;
-  border-radius: 6rpx;
-  width: 90%;
+  letter-spacing: 3rpx;
   color: #fff;
-  right: 0;
+  background: #ab956d;
+  border: none;
+  border-radius: 48rpx;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: flex;
-  bottom: 0;
-  left: 0;
-  padding: 0;
-  margin-left: 5%;
   text-align: center;
-  /* padding-left: -5rpx; */
-  border-top-left-radius: 50rpx;
-  border-bottom-left-radius: 50rpx;
-  border-top-right-radius: 50rpx;
-  border-bottom-right-radius: 50rpx;
-  letter-spacing: 3rpx;
+}
+
+.wx-login-btn::after {
+  border: none;
+}
+
+.wx-login-btn-hover {
+  background: #9a855e;
+  color: #fff;
+}
+
+.agreement-tip {
+  margin-top: 20rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+}
+
+.agreement-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.agreement-check {
+  transform: scale(0.72);
+  margin-right: 4rpx;
+}
+
+.agreement-link {
+  color: #576b95;
 }
 
 .account-login-btn {
   width: 90%;
   margin: 0 auto;
+  margin-left: 5%;
   color: #fff;
   font-size: 30rpx;
   height: 96rpx;
   line-height: 96rpx;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: flex;
-  bottom: 0;
-  left: 0;
-  border-radius: 0;
   padding: 0;
-  margin-left: 5%;
   text-align: center;
-  /* padding-left: -5rpx; */
-  border-top-left-radius: 50rpx;
-  border-bottom-left-radius: 50rpx;
-  border-top-right-radius: 50rpx;
-  border-bottom-right-radius: 50rpx;
   letter-spacing: 3rpx;
-  background-image: linear-gradient(to right, #9a9ba1 0%, #9a9ba1 100%);
+  border-radius: 48rpx;
+  background: #9a9ba1;
+}
+
+.account-login-btn::after {
+  border: none;
 }

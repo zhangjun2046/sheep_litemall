@@ -18,11 +18,23 @@ Page({
   },
 
   onShareAppMessage: function() {
-    return {
-      title: 'litemall小程序商场',
-      desc: '开源微信小程序商城',
+    var share = {
+      title: '草原本味 · 自然珍贵',
       path: '/pages/index/index'
+    };
+    if (this.data.banner && this.data.banner.length && this.data.banner[0].url) {
+      share.imageUrl = this.data.banner[0].url;
     }
+    return share;
+  },
+  onShareTimeline: function() {
+    var share = {
+      title: '草原本味 · 自然珍贵'
+    };
+    if (this.data.banner && this.data.banner.length && this.data.banner[0].url) {
+      share.imageUrl = this.data.banner[0].url;
+    }
+    return share;
   },
 
   onPullDownRefresh() {
@@ -106,6 +118,10 @@ Page({
     }
 
     this.getIndexData();
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
   },
   onReady: function() {
     // 页面渲染完成
@@ -172,19 +188,8 @@ Page({
       });
     }
   },
-  onImageError(e) {
+  onImageError: function(e) {
     var src = (e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.src) || '';
     console.error('image load failed:', src, e.detail);
-    if (!this._imageErrorTips) {
-      this._imageErrorTips = 0;
-    }
-    if (this._imageErrorTips < 1) {
-      this._imageErrorTips += 1;
-      wx.showModal({
-        title: '图片加载失败',
-        content: '请点右上角 ··· → 打开调试 后重试。失败地址：' + src,
-        showCancel: false
-      });
-    }
   },
 })

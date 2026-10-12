@@ -6,6 +6,7 @@ var app = getApp();
 Page({
   data: {
     canIUseGetUserProfile: false,
+    agreed: false
   },
   onLoad: function(options) {
     // 页面初始化 options为页面跳转所带来的参数
@@ -30,7 +31,19 @@ Page({
     // 页面关闭
 
   },
+  onAgreeChange: function(e) {
+    this.setData({
+      agreed: e.detail.value && e.detail.value.length > 0
+    });
+  },
   wxLogin: function(e) {
+    if (!this.data.agreed) {
+      wx.showToast({
+        title: '请先阅读并同意用户协议和隐私政策',
+        icon: 'none'
+      });
+      return;
+    }
     if (this.data.canIUseGetUserProfile) {
       wx.getUserProfile({
         desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
@@ -73,6 +86,11 @@ Page({
         util.showErrorToast('微信登录失败');
       });
 
+    });
+  },
+  goAgreement: function(e) {
+    wx.navigateTo({
+      url: '/pages/ucenter/agreement/agreement?tab=' + e.currentTarget.dataset.tab
     });
   },
   accountLogin: function() {

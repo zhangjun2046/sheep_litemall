@@ -235,7 +235,7 @@ Page({
               'fail': function(res) {
                 util.showPayFail(res, function() {
                   wx.redirectTo({
-                    url: '/pages/payResult/payResult?status=0&orderId=' + orderId
+                    url: '/pages/ucenter/orderDetail/orderDetail?id=' + orderId
                   });
                 }, { orderSn: payOrderSn });
               },

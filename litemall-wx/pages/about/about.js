@@ -10,7 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    name: 'litemall',
+    name: '蒙关牧',
     address: 'https://github.com/linlinjava/litemall',
     latitude: '31.201900',
     longitude: '121.587839',
@@ -53,5 +53,21 @@ Page({
     wx.makePhoneCall({
       phoneNumber: that.data.phone,
     })
+  },
+  copyQQ: function() {
+    var qq = this.data.qq;
+    if (!qq) {
+      return;
+    }
+    wx.setClipboardData({
+      data: String(qq),
+      success: function() {
+        wx.hideToast();
+        wx.showToast({
+          title: '已复制',
+          icon: 'none'
+        });
+      }
+    });
   }
 })

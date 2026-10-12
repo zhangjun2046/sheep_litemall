@@ -28,7 +28,7 @@ Page({
     let that = this;
     return {
       title: '邀请团购',
-      desc: '唯爱与美食不可辜负',
+      desc: '草原本味 · 自然珍贵',
       path: '/pages/index/index?grouponId=' + this.data.id
     }
   },

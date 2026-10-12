@@ -1,0 +1,16 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{activeTab === 'user' ? 'active' : ''}}" bindtap="switchTab" data-tab="user">
+      <text class="tab-text">用户协议</text>
+    </view>
+    <view class="tab {{activeTab === 'privacy' ? 'active' : ''}}" bindtap="switchTab" data-tab="privacy">
+      <text class="tab-text">隐私政策</text>
+    </view>
+  </view>
+  <scroll-view class="scroll" scroll-y scroll-top="{{scrollTop}}" scroll-with-animation>
+    <view class="content">
+      <text class="updated">{{updated}}</text>
+      <text class="body">{{bodyText}}</text>
+    </view>
+  </scroll-view>
+</view>

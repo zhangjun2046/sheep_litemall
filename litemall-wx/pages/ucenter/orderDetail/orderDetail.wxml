@@ -80,19 +80,10 @@
     </view>
   </view>
 
-  <view class="order-express" bindtap="expandDetail" wx:if="{{ orderInfo.expNo }}">
-    <view class="order-express">
-      <view class="title">
-        <view class="t">快递公司：{{orderInfo.expName}}</view>
-        <view class="b">物流单号：{{orderInfo.expNo}}</view>
-      </view>
-      <van-icon class="ti" name="arrow" />      
-    </view>
-    <view class="traces" wx:for="{{expressInfo.Traces}}" wx:key="item" wx:for-item="iitem" wx:if="{{ flag }}">
-      <view class="trace">
-        <view class="acceptStation">{{iitem.AcceptStation}}</view>
-        <view class="acceptTime">{{iitem.AcceptTime}}</view>
-      </view>
+  <view class="order-express" bindtap="copyExpNo" wx:if="{{ orderInfo.expNo }}">
+    <view class="title">
+      <view class="t">快递公司：{{orderInfo.expName}}</view>
+      <view class="b">物流单号：{{orderInfo.expNo}}</view>
     </view>
   </view>
 </view>

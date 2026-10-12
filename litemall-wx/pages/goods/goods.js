@@ -30,8 +30,7 @@ Page({
     collect: false,
     shareImage: '',
     isGroupon: false, //标识是否是一个参团购买
-    soldout: false,
-    canWrite: false
+    soldout: false
   },
 
   // 页面分享
@@ -39,7 +38,7 @@ Page({
     let that = this;
     return {
       title: that.data.goods.name,
-      desc: '唯爱与美食不可辜负',
+      desc: '草原本味 · 自然珍贵',
       path: '/pages/index/index?goodId=' + this.data.id
     }
   },
@@ -452,30 +451,6 @@ Page({
       });
       this.getGrouponInfo(options.grouponId);
     }
-    let that = this;
-    wx.getSetting({
-      success: function(res) {
-        if (!res.authSetting['scope.writePhotosAlbum']) {
-          wx.authorize({
-            scope: 'scope.writePhotosAlbum',
-            success: function() {
-              that.setData({
-                canWrite: true
-              });
-            },
-            fail: function() {
-              that.setData({
-                canWrite: false
-              });
-            }
-          });
-        } else {
-          that.setData({
-            canWrite: true
-          });
-        }
-      }
-    });
   },
   onShow: function() {
     // 页面显示

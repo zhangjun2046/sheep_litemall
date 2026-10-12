@@ -133,18 +133,27 @@ function logWxPay(step, detail) {
   }
 }
 
+function isPayCancel(res) {
+  var msg = String((res && (res.errMsg || res.errmsg)) || '').toLowerCase();
+  return msg.indexOf('cancel') !== -1;
+}
+
 function showPayFail(res, afterClose, extra) {
-  var errMsg = (res && (res.errMsg || res.errmsg)) || '支付失败';
-  var errCode = res && (res.errCode !== undefined ? res.errCode : res.errno);
   var orderSn = extra && extra.orderSn;
   logWxPay('requestPayment fail', Object.assign({ orderSn: orderSn }, res || {}));
-  var content = (errCode !== undefined && errCode !== null ? ('errCode=' + errCode + '\n') : '') + errMsg;
-  if (orderSn) {
-    content += '\n商品订单号=' + orderSn;
+  if (isPayCancel(res)) {
+    wx.showToast({
+      title: '已取消支付',
+      icon: 'none'
+    });
+    if (typeof afterClose === 'function') {
+      setTimeout(afterClose, 400);
+    }
+    return;
   }
   wx.showModal({
-    title: '支付失败',
-    content: content,
+    title: '支付未完成',
+    content: '请稍后重试。如已扣款，请勿重复支付。',
     showCancel: false,
     complete: function() {
       if (typeof afterClose === 'function') {

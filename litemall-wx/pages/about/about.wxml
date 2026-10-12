@@ -32,7 +32,7 @@
     <view class="item-left">
       <text>{{qq}}</text> 
     </view>
-    <view class="item-right">
+    <view class="item-right" bindtap="copyQQ">
       <van-icon class="right-icon" name="friends-o" />
     </view>
   </view>

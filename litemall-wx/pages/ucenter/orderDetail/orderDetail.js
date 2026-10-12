@@ -6,8 +6,6 @@ Page({
     orderId: 0,
     orderInfo: {},
     orderGoods: [],
-    expressInfo: {},
-    flag: false,
     handleOption: {}
   },
   onLoad: function(options) {
@@ -23,11 +21,21 @@ Page({
     wx.hideNavigationBarLoading() //完成停止加载
     wx.stopPullDownRefresh() //停止下拉刷新
   },
-  expandDetail: function() {
-    let that = this;
-    this.setData({
-      flag: !that.data.flag
-    })
+  copyExpNo: function() {
+    var expNo = this.data.orderInfo && this.data.orderInfo.expNo;
+    if (!expNo) {
+      return;
+    }
+    wx.setClipboardData({
+      data: String(expNo),
+      success: function() {
+        wx.hideToast();
+        wx.showToast({
+          title: '已粘贴',
+          icon: 'none'
+        });
+      }
+    });
   },
   getOrderDetail: function() {
     wx.showLoading({
@@ -47,8 +55,7 @@ Page({
         that.setData({
           orderInfo: res.data.orderInfo,
           orderGoods: res.data.orderGoods,
-          handleOption: res.data.orderInfo.handleOption,
-          expressInfo: res.data.expressInfo
+          handleOption: res.data.orderInfo.handleOption
         });
       }
 

@@ -13,6 +13,7 @@
     "pages/ucenter/couponList/couponList",
     "pages/ucenter/couponSelect/couponSelect",
     "pages/ucenter/collect/collect",
+    "pages/ucenter/agreement/agreement",
     "pages/auth/login/login",
     "pages/auth/accountLogin/accountLogin",
     "pages/auth/register/register",
@@ -44,7 +45,7 @@
   ],
   "window": {
     "navigationBarBackgroundColor": "#FFFFFF",
-    "navigationBarTitleText": "litemall小程序商城",
+    "navigationBarTitleText": "蒙关牧",
     "enablePullDownRefresh": false,
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FFFFFF",
@@ -82,7 +83,7 @@
     "uploadFile": 10000,
     "downloadFile": 10000
   },
-  "debug": true,
+  "debug": false,
   "usingComponents": {
     "van-cell": "./lib/vant-weapp/cell/index",
     "van-cell-group": "./lib/vant-weapp/cell-group/index",
