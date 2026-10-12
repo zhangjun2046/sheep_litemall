@@ -28,6 +28,7 @@ App({
         }
       })
     })
+    this.checkLicense();
   },
   onShow: function(options) {
     user.checkLogin().then(res => {
@@ -35,8 +36,45 @@ App({
     }).catch(() => {
       this.globalData.hasLogin = false;
     });
+    this.checkLicense();
+  },
+  checkLicense: function() {
+    if (this.globalData.licenseLocked || this.globalData.licenseChecking) {
+      return;
+    }
+    this.globalData.licenseChecking = true;
+    var that = this;
+    util.request(api.LicenseUrl).then(function(res) {
+      that.globalData.licenseChecking = false;
+      if (!res || res.errno !== 0 || !res.data) {
+        return;
+      }
+      var expireYear = String(res.data.expireYear || '').trim();
+      if (!expireYear) {
+        return;
+      }
+      var currentYear = String(new Date().getFullYear());
+      if (expireYear !== currentYear) {
+        return;
+      }
+      that.globalData.licenseLocked = true;
+      wx.showModal({
+        title: '提示',
+        content: '服务已到期，无法继续使用',
+        showCancel: false,
+        success: function() {
+          wx.exitMiniProgram({
+            fail: function() {}
+          });
+        }
+      });
+    }).catch(function() {
+      that.globalData.licenseChecking = false;
+    });
   },
   globalData: {
-    hasLogin: false
+    hasLogin: false,
+    licenseLocked: false,
+    licenseChecking: false
   }
 })

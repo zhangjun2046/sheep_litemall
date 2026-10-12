@@ -30,7 +30,8 @@ Page({
     collect: false,
     shareImage: '',
     isGroupon: false, //标识是否是一个参团购买
-    soldout: false
+    soldout: false,
+    canWrite: false
   },
 
   // 页面分享
@@ -451,6 +452,30 @@ Page({
       });
       this.getGrouponInfo(options.grouponId);
     }
+    let that = this;
+    wx.getSetting({
+      success: function(res) {
+        if (!res.authSetting['scope.writePhotosAlbum']) {
+          wx.authorize({
+            scope: 'scope.writePhotosAlbum',
+            success: function() {
+              that.setData({
+                canWrite: true
+              });
+            },
+            fail: function() {
+              that.setData({
+                canWrite: false
+              });
+            }
+          });
+        } else {
+          that.setData({
+            canWrite: true
+          });
+        }
+      }
+    });
   },
   onShow: function() {
     // 页面显示

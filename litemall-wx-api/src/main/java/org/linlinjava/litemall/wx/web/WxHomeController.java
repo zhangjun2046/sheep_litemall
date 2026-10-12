@@ -2,6 +2,7 @@ package org.linlinjava.litemall.wx.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.linlinjava.litemall.core.config.LicenseProperties;
 import org.linlinjava.litemall.core.system.SystemConfig;
 import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.LitemallCategory;
@@ -52,6 +53,9 @@ public class WxHomeController {
 
     @Autowired
     private LitemallCouponService couponService;
+
+    @Autowired
+    private LicenseProperties licenseProperties;
 
     private final static ArrayBlockingQueue<Runnable> WORK_QUEUE = new ArrayBlockingQueue<>(9);
 
@@ -176,6 +180,16 @@ public class WxHomeController {
             categoryList.add(catGoods);
         }
         return categoryList;
+    }
+
+    /**
+     * 小程序服务到期年份（免登录）
+     */
+    @GetMapping("/license")
+    public Object license() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("expireYear", licenseProperties.getExpireYear());
+        return ResponseUtil.ok(data);
     }
 
     /**

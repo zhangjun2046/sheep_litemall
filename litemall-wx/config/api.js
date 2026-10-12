@@ -8,12 +8,14 @@
 // var WxApiRoot = 'http://129.211.210.86:8080/wx/';
 // 云平台 HTTPS 域名（真机 / 体验版）
 var WxApiRoot = 'https://bayoumu.cn/wx/';
+//var WxApiRoot = 'http://localhost:8080/wx/';
 // 云平台上线时使用
 // var WxApiRoot = 'https://www.menethil.com.cn/wx/';
 
 module.exports = {
   IndexUrl: WxApiRoot + 'home/index', //首页数据接口
   AboutUrl: WxApiRoot + 'home/about', //介绍信息
+  LicenseUrl: WxApiRoot + 'home/license', //服务到期年份
 
   AuthLoginByWeixin: WxApiRoot + 'auth/login_by_weixin', //微信登录
   AuthLoginByAccount: WxApiRoot + 'auth/login', //账号登录
