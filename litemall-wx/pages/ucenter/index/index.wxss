@@ -108,13 +108,21 @@ page {
 
 .user_column_item_badge {
   height: 28rpx;
-  width: 28rpx;
+  min-width: 28rpx;
+  padding: 0 6rpx;
+  line-height: 28rpx;
+  font-size: 20rpx;
   position: absolute;
   background: #b4282d;
   color: #fff;
-  border-radius: 50%;
+  border-radius: 14rpx;
   margin-top: 20rpx;
   margin-left: 40rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  z-index: 1;
 }
 
 .user_column_item_image {
