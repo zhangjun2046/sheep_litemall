@@ -85,7 +85,7 @@ Page({
   },
   contentInput: function(e) {
     this.setData({
-      contentLength: e.detail.cursor,
+      contentLength: e.detail.value.length,
       content: e.detail.value,
     });
   },
