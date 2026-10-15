@@ -33,7 +33,7 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.button.login') }}</el-button>
 
-      <div style="position:relative">
+      <div v-if="showDemoAccount" style="position:relative">
         <div class="tips">
           <span> 超级管理员用户名: admin123</span>
           <span> 超级管理员用户名：admin123</span>
@@ -50,7 +50,7 @@
     </el-form>
 
     <div class="copyright">
-      Copyright © 2022 xxx.com 版权所有 <a href="https://github.com/linlinjava/litemall">沪ICP备xxx号</a>
+      Copyright © 2022
     </div>
   </div>
 </template>
@@ -70,10 +70,12 @@ export default {
         callback()
       }
     }
+    const showDemoAccount = process.env.VUE_APP_SHOW_DEMO_ACCOUNT === 'true'
     return {
+      showDemoAccount,
       loginForm: {
-        username: 'admin123',
-        password: 'admin123',
+        username: showDemoAccount ? 'admin123' : '',
+        password: showDemoAccount ? 'admin123' : '',
         code: ''
       },
       codeImg: '',
