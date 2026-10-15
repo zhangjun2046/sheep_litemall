@@ -1,13 +1,22 @@
 <view class="container">
 
-  <view class="label">项目名称:</view>
+  <view class="brand-info">
+    <view class="name" wx:if="{{picUrl}}">
+      <image class="img" src="{{picUrl}}" background-size="cover" mode="aspectFill"></image>
+    </view>
+    <view class="desc" wx:if="{{desc}}">
+      {{desc}}
+    </view>
+  </view>
+
+  <view class="label">品牌名称:</view>
   <view class="about-item">
     <view class="item-left">
       <text>{{name}}</text> 
     </view>
   </view>
 
-  <view class="label">项目地址:</view>
+  <view class="label">公司地址:</view>
   <view class="about-item">
     <view class="item-left">
       <text>{{address}}</text> 

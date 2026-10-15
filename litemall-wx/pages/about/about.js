@@ -11,6 +11,8 @@ Page({
    */
   data: {
     name: '蒙关牧',
+    desc: '位置于内蒙古呼伦贝尔市新巴尔虎右旗阿日哈沙特镇口岸边境牧场，纯天然散养牛羊。',
+    picUrl: '',
     address: 'https://github.com/linlinjava/litemall',
     latitude: '31.201900',
     longitude: '121.587839',
@@ -22,7 +24,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.getAbout()
+    this.getAbout();
+    this.getBrandInfo();
   },
   getAbout: function () {
     let that = this;
@@ -39,11 +42,57 @@ Page({
       }
     });
   },
+  getBrandInfo: function () {
+    let that = this;
+    util.request(api.BrandDetail, {
+      id: 1046003
+    }).then(function (res) {
+      if (res.errno === 0 && res.data && res.data.id) {
+        that.setData({
+          desc: res.data.desc || that.data.desc,
+          picUrl: res.data.picUrl || ''
+        });
+      } else {
+        that.findBrandFromList();
+      }
+    }).catch(function () {
+      that.findBrandFromList();
+    });
+  },
+  findBrandFromList: function () {
+    let that = this;
+    util.request(api.BrandList, {
+      page: 1,
+      limit: 50
+    }).then(function (res) {
+      if (res.errno === 0 && res.data && Array.isArray(res.data.list)) {
+        let targetName = that.data.name || '蒙关牧';
+        let matched = res.data.list.find(function (item) {
+          return item.name === targetName || item.name === '蒙关牧';
+        }) || res.data.list[0];
+        if (matched) {
+          that.setData({
+            desc: matched.desc || that.data.desc,
+            picUrl: matched.picUrl || ''
+          });
+        }
+      }
+    });
+  },
   showLocation: function (e) {
-    var that = this
+    var that = this;
+    var lat = parseFloat(that.data.latitude);
+    var lng = parseFloat(that.data.longitude);
+    if (isNaN(lat) || isNaN(lng)) {
+      wx.showToast({
+        title: '暂未配置地图坐标',
+        icon: 'none'
+      });
+      return;
+    }
     wx.openLocation({
-      latitude: parseFloat(that.data.latitude),
-      longitude: parseFloat(that.data.longitude),
+      latitude: lat,
+      longitude: lng,
       name: that.data.name,
       address: that.data.address,
     })
