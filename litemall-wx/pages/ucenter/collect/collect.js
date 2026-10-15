@@ -5,7 +5,6 @@ var app = getApp();
 
 Page({
   data: {
-    type: 0,
     collectList: [],
     page: 1,
     limit: 10,
@@ -17,7 +16,7 @@ Page({
     });
     let that = this;
     util.request(api.CollectList, {
-      type: that.data.type,
+      type: 0,
       page: that.data.page,
       limit: that.data.limit
     }).then(function(res) {
@@ -30,17 +29,6 @@ Page({
     }).finally(() => {
       wx.hideLoading();
     });
-  },
-  switchTab: function(event) {
-    let type = event.currentTarget.dataset.index;
-    this.setData({
-      collectList: [],
-      type,
-      page: 1,
-      limit: 10,
-      totalPages: 1
-    });
-    this.getCollectList();
   },
   onLoad: function(options) {
     this.getCollectList();
@@ -89,7 +77,7 @@ Page({
           if (res.confirm) {
 
             util.request(api.CollectAddOrDelete, {
-              type: that.data.type,
+              type: 0,
               valueId: valueId
             }, 'POST').then(function(res) {
               if (res.errno === 0) {
@@ -108,12 +96,8 @@ Page({
         }
       })
     } else {
-      var prefix = '/pages/goods/goods?id='
-      if(this.data.type == 1){
-        prefix = "/pages/topicDetail/topicDetail?id="
-      }
       wx.navigateTo({
-        url: prefix + valueId,
+        url: '/pages/goods/goods?id=' + valueId,
       });
     }
   },
