@@ -79,6 +79,18 @@ public class AdminOrderController {
     }
 
     /**
+     * 订单物流轨迹。权限与订单详情相同，不单独注册按钮权限，避免与 admin:order:read 重复。
+     *
+     * @param id 订单ID
+     * @return 物流轨迹
+     */
+    @RequiresPermissions("admin:order:read")
+    @GetMapping("/express")
+    public Object express(@NotNull Integer id) {
+        return adminOrderService.express(id);
+    }
+
+    /**
      * 订单退款
      *
      * @param body 订单信息，{ orderId：xxx }

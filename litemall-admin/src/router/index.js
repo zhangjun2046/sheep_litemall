@@ -162,6 +162,7 @@ export const asyncRoutes = [
         component: () => import('@/views/mall/region'),
         name: 'region',
         meta: {
+          perms: ['GET /admin/region/list', 'POST /admin/region/create', 'POST /admin/region/update', 'POST /admin/region/delete'],
           title: 'app.menu.mall_region',
           noCache: true
         }

@@ -14,3 +14,27 @@ export function listSubRegion(query) {
     params: query
   })
 }
+
+export function createRegion(data) {
+  return request({
+    url: '/region/create',
+    method: 'post',
+    data
+  })
+}
+
+export function updateRegion(data) {
+  return request({
+    url: '/region/update',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteRegion(data) {
+  return request({
+    url: '/region/delete',
+    method: 'post',
+    data
+  })
+}

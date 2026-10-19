@@ -1,20 +1,27 @@
 litemall:
   # 开发者应该设置成自己的wx相关信息（app-id 须与 litemall-wx/project.config.json 一致）
   wx:
-    app-id: wx02b6a6438695bf92
-    app-secret: e04004829d4c383b4db7769d88dfbca1
+    app-id: wx91890c8b333142f5
+    app-secret: b0b2ccfe23d644d61fc280af44de05c2
     # 本地联调：code2session 失败时模拟登录；上线前改为 false，并填写真实 app-secret
-    mock-enabled: true
-    mch-id: 111111
-    mch-key: xxxxxx
-    notify-url: http://www.example.com/wx/order/pay-notify
+    mock-enabled: false
+    mch-id: 1748139577
+    mch-key: B202A60706IG19H8E01L01a2X05q891Y
+    notify-url: https://bayoumu.cn/wx/order/pay-notify
     # 商户证书文件路径
     # 请参考“商户证书”一节 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=4_3
-    key-path: xxxxx
+    key-path: /Users/zhangshuo/Desktop/mengguanmu/sheep_litemall/certs/apiclient_cert.p12
     # 消息推送配置token
     token:
     # 消息推送配置AesKey
     aes-key:
+
+  # 登录 token 过期时间（小时）
+  # 管理端：Shiro Session 空闲超时，有操作按最后访问续期
+  # 小程序：JWT 从登录起算的绝对过期，到期需重新登录
+  auth:
+    admin-session-timeout-hours: 24
+    wx-token-expire-hours: 48
 
   #通知相关配置
   notify:
@@ -27,26 +34,32 @@ litemall:
       sendfrom: ex@ex.com.cn
       sendto: ex@qq.com
       port: 465
-    # 短消息模版通知配置
-    # 短信息用于通知客户，例如发货短信通知，注意配置格式；template-name，template-templateId 请参考 NotifyType 枚举值
+    # 短消息模版通知配置（name 对应 NotifyType）
+    # 密钥、签名、模板 ID、运营手机号配齐后再把 enable 改为 true
     sms:
-      enable: false
+      enable: true
       # 如果是腾讯云短信，则设置active的值tencent
       # 如果是阿里云短信，则设置active的值aliyun
       active: tencent
-      sign: litemall
+      sign: 北京万商云猫智汇
+      # 支付成功通知运营，多个国内号用英文逗号分隔
+      operator-mobiles: 16601124086
       template:
-      - name: paySucceed
-        templateId: 156349
-      - name: captcha
-        templateId: 156433
+      # newOrder 模板 1 个变量：完整订单号
+      - name: newOrder
+        templateId: 2740255
+      # ship 模板 1 个变量：完整快递单号
       - name: ship
-        templateId: 158002
+        templateId: 2746129
+      # refundApply 模板 1 个变量：完整订单号（申请退款/售后通知运营）
+      - name: refundApply
+        templateId: 2746134
+      # refund 模板 1 个变量：退款金额
       - name: refund
-        templateId: 159447
+        templateId: 2746140
       tencent:
-        appid: 111111111
-        appkey: xxxxxxxxxxxxxx
+        appid: 1400929181
+        appkey: b4f800349edc5ba95422513d5a3e34a1
       aliyun:
         regionId: xxx
         accessKeyId: xxx
@@ -58,32 +71,16 @@ litemall:
     appId: "XXXXXXXXX"
     appKey: "XXXXXXXXXXXXXXXXXXXXXXXXX"
     vendors:
-    - code: "ZTO"
-      name: "中通快递"
-    - code: "YTO"
-      name: "圆通速递"
-    - code: "YD"
-      name: "韵达速递"
-    - code: "YZPY"
-      name: "邮政快递包裹"
-    - code: "EMS"
-      name: "EMS"
-    - code: "DBL"
-      name: "德邦快递"
-    - code: "FAST"
-      name: "快捷快递"
-    - code: "ZJS"
-      name: "宅急送"
-    - code: "TNT"
-      name: "TNT快递"
-    - code: "UPS"
-      name: "UPS"
-    - code: "DHL"
-      name: "DHL"
-    - code: "FEDEX"
-      name: "FEDEX联邦(国内件)"
-    - code: "FEDEX_GJ"
-      name: "FEDEX联邦(国际件)"
+    - code: "SF"
+      name: "顺丰速运"
+
+  # 阿里云市场物流查询，本期只查顺丰
+  wuliu:
+    host: https://wuliu.market.alicloudapi.com
+    path: /kdi
+    appcode: a51e7525bf0d47bcb0d8d220e5841861
+    sf-type: SFEXPRESS
+    sf-vendor-code: SF
 
   # 对象存储配置
   storage:

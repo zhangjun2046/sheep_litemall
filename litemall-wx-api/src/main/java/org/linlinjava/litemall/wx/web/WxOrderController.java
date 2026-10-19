@@ -57,6 +57,18 @@ public class WxOrderController {
     }
 
     /**
+     * 订单物流轨迹。打开物流页时查询，不修改订单。
+     *
+     * @param userId  用户ID
+     * @param orderId 订单ID
+     * @return 物流轨迹
+     */
+    @GetMapping("express")
+    public Object express(@LoginUser Integer userId, @NotNull Integer orderId) {
+        return wxOrderService.express(userId, orderId);
+    }
+
+    /**
      * 提交订单
      *
      * @param userId 用户ID

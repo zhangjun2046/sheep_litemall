@@ -5,10 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.linlinjava.litemall.core.util.RegexUtil;
 import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.LitemallAddress;
+import org.linlinjava.litemall.db.domain.LitemallRegion;
 import org.linlinjava.litemall.db.service.LitemallAddressService;
 import org.linlinjava.litemall.db.service.LitemallRegionService;
 import org.linlinjava.litemall.wx.annotation.LoginUser;
-import org.linlinjava.litemall.wx.service.GetRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/wx/address")
 @Validated
-public class WxAddressController extends GetRegionService {
+public class WxAddressController {
 	private final Log logger = LogFactory.getLog(WxAddressController.class);
 
 	@Autowired
@@ -83,26 +83,28 @@ public class WxAddressController extends GetRegionService {
 			return ResponseUtil.badArgument();
 		}
 
-		String province = address.getProvince();
-		if (StringUtils.isEmpty(province)) {
-			return ResponseUtil.badArgument();
-		}
-
-		String city = address.getCity();
-		if (StringUtils.isEmpty(city)) {
-			return ResponseUtil.badArgument();
-		}
-
-		String county = address.getCounty();
-		if (StringUtils.isEmpty(county)) {
-			return ResponseUtil.badArgument();
-		}
-
-
 		String areaCode = address.getAreaCode();
-		if (StringUtils.isEmpty(areaCode)) {
-			return ResponseUtil.badArgument();
+		if (StringUtils.isEmpty(areaCode) || !areaCode.matches("\\d{6}")) {
+			return ResponseUtil.fail(402, "区域编码必须是6位数字");
 		}
+
+		LitemallRegion county = regionService.findByCodeAndType(Integer.valueOf(areaCode), (byte) 3);
+		if (county == null) {
+			return ResponseUtil.fail(402, "行政区域不存在");
+		}
+		LitemallRegion city = regionService.findById(county.getPid());
+		if (city == null) {
+			return ResponseUtil.fail(402, "行政区域不完整");
+		}
+		LitemallRegion province = regionService.findById(city.getPid());
+		if (province == null) {
+			return ResponseUtil.fail(402, "行政区域不完整");
+		}
+
+		address.setProvince(province.getName());
+		address.setCity(city.getName());
+		address.setCounty(county.getName());
+		address.setAreaCode(String.valueOf(county.getCode()));
 
 		String detailedAddress = address.getAddressDetail();
 		if (StringUtils.isEmpty(detailedAddress)) {

@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.linlinjava.litemall.core.notify.NotifyService;
 import org.linlinjava.litemall.core.notify.NotifyType;
+import org.linlinjava.litemall.core.wuliu.WuliuService;
 import org.linlinjava.litemall.core.util.DateTimeUtil;
 import org.linlinjava.litemall.core.util.JacksonUtil;
 import org.linlinjava.litemall.core.util.ResponseUtil;
@@ -54,6 +55,8 @@ public class AdminOrderService {
     private LogHelper logHelper;
     @Autowired
     private LitemallCouponUserService couponUserService;
+    @Autowired
+    private WuliuService wuliuService;
 
     public Object list(String nickname, String consignee, String orderSn, LocalDateTime start, LocalDateTime end, List<Short> orderStatusArray,
                        Integer page, Integer limit, String sort, String order) {
@@ -71,6 +74,23 @@ public class AdminOrderService {
         data.put("user", user);
 
         return ResponseUtil.ok(data);
+    }
+
+    /**
+     * 查询订单物流轨迹。只读，不修改订单。
+     *
+     * @param id 订单ID
+     * @return 物流轨迹
+     */
+    public Object express(Integer id) {
+        if (id == null) {
+            return ResponseUtil.badArgument();
+        }
+        LitemallOrder order = orderService.findById(id);
+        if (order == null) {
+            return ResponseUtil.badArgument();
+        }
+        return ResponseUtil.ok(wuliuService.query(order.getShipSn(), order.getMobile(), order.getShipChannel()).toData());
     }
 
     /**

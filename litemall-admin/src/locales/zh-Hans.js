@@ -223,7 +223,30 @@ export default {
     table: {
       name: '区域名称',
       type: '区域类型',
-      code: '区域编码'
+      code: '区域编码',
+      actions: '操作'
+    },
+    form: {
+      name: '区域名称',
+      code: '区域编码',
+      type: '区域类型',
+      parent: '上级区域'
+    },
+    value: {
+      type_1: '省',
+      type_2: '市',
+      type_3: '区',
+      parent_none: '无（省级）'
+    },
+    button: {
+      add_child: '新增下级'
+    },
+    placeholder: {
+      name: '请输入区域名称',
+      code: '6位数字编码'
+    },
+    message: {
+      delete_confirm: '确认删除该行政区域？'
     }
   },
   mall_brand: {
@@ -288,6 +311,7 @@ export default {
       detail_ship_channel: '（快递公司）{ship_channel}',
       detail_ship_sn: '（快递单号）{ship_sn}',
       detail_ship_time: '（发货时间）{ship_time}',
+      detail_express_status: '物流状态：{status}',
       detail_refund_amount: '（退款金额）{refund_amount}元',
       detail_refund_type: '（退款类型）{refund_type}',
       detail_refund_content: '（退款备注）{refund_content}',
@@ -359,7 +383,8 @@ export default {
       ship: '发货',
       refund: '退款',
       detail_cancel: '取 消',
-      detail_print: '打 印'
+      detail_print: '打 印',
+      view_express: '查看物流'
     }
   },
   mall_aftersale: {

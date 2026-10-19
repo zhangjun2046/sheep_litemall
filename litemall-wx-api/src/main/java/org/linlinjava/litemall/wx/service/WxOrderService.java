@@ -13,7 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.linlinjava.litemall.core.express.ExpressService;
-import org.linlinjava.litemall.core.express.dao.ExpressInfo;
+import org.linlinjava.litemall.core.wuliu.WuliuService;
 import org.linlinjava.litemall.core.notify.NotifyService;
 import org.linlinjava.litemall.core.qcode.QCodeService;
 import org.linlinjava.litemall.core.system.SystemConfig;
@@ -94,6 +94,8 @@ public class WxOrderService {
     private QCodeService qCodeService;
     @Autowired
     private ExpressService expressService;
+    @Autowired
+    private WuliuService wuliuService;
     @Autowired
     private LitemallCommentService commentService;
     @Autowired
@@ -210,24 +212,32 @@ public class WxOrderService {
         Map<String, Object> result = new HashMap<>();
         result.put("orderInfo", orderVo);
         result.put("orderGoods", orderGoodsList);
-
-        // 订单状态为已发货且物流信息不为空
-        //"YTO", "800669400640887922"
-        if (order.getOrderStatus().equals(OrderUtil.STATUS_SHIP)) {
-            ExpressInfo ei = expressService.getExpressInfo(order.getShipChannel(), order.getShipSn());
-            if(ei == null){
-                result.put("expressInfo", new ArrayList<>());
-            }
-            else {
-                result.put("expressInfo", ei);
-            }
-        }
-        else{
-            result.put("expressInfo", new ArrayList<>());
-        }
+        result.put("expressInfo", new ArrayList<>());
 
         return ResponseUtil.ok(result);
 
+    }
+
+    /**
+     * 查询订单物流轨迹。只读，不修改订单。
+     *
+     * @param userId  用户ID
+     * @param orderId 订单ID
+     * @return 物流轨迹
+     */
+    public Object express(Integer userId, Integer orderId) {
+        if (userId == null) {
+            return ResponseUtil.unlogin();
+        }
+
+        LitemallOrder order = orderService.findById(userId, orderId);
+        if (null == order) {
+            return ResponseUtil.fail(ORDER_UNKNOWN, "订单不存在");
+        }
+        if (!order.getUserId().equals(userId)) {
+            return ResponseUtil.fail(ORDER_INVALID, "不是当前用户的订单");
+        }
+        return ResponseUtil.ok(wuliuService.query(order.getShipSn(), order.getMobile(), order.getShipChannel()).toData());
     }
 
     /**

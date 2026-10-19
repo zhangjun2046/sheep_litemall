@@ -223,7 +223,30 @@ export default {
     table: {
       name: 'Name',
       type: 'Type',
-      code: 'Code'
+      code: 'Code',
+      actions: 'Actions'
+    },
+    form: {
+      name: 'Name',
+      code: 'Code',
+      type: 'Type',
+      parent: 'Parent'
+    },
+    value: {
+      type_1: 'Province',
+      type_2: 'City',
+      type_3: 'District',
+      parent_none: 'None (province)'
+    },
+    button: {
+      add_child: 'Add child'
+    },
+    placeholder: {
+      name: 'Region name',
+      code: '6-digit code'
+    },
+    message: {
+      delete_confirm: 'Delete this region?'
     }
   },
   mall_brand: {
@@ -287,6 +310,7 @@ export default {
       detail_pay_time: '(payment time) {pay_time} ',
       detail_ship_channel: '(shipment company) {ship_channel} ',
       detail_ship_sn: '(shipment SN) {ship_sn} ',
+      detail_express_status: 'Status: {status}',
       detail_ship_time: '(shipment time) {ship_time} ',
       detail_refund_amount: '(refund amount) {refund_amount}元 ',
       detail_refund_type: '(type) {refund_type} ',
@@ -359,7 +383,8 @@ export default {
       ship: 'Ship',
       refund: 'Refund',
       detail_cancel: 'Cancel',
-      detail_print: 'Print'
+      detail_print: 'Print',
+      view_express: 'Track shipment'
     }
   },
   mall_aftersale: {

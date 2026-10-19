@@ -156,6 +156,30 @@
             <span>{{ $t('mall_order.text.detail_ship_channel', { ship_channel: orderDetail.order.shipChannel }) }}</span>
             <span>{{ $t('mall_order.text.detail_ship_sn', { ship_sn: orderDetail.order.shipSn }) }}</span>
             <span>{{ $t('mall_order.text.detail_ship_time', { ship_time: orderDetail.order.shipTime }) }}</span>
+            <el-button
+              v-if="orderDetail.order.shipSn"
+              type="primary"
+              size="mini"
+              :loading="expressLoading"
+              @click="handleExpress"
+            >{{ $t('mall_order.button.view_express') }}</el-button>
+            <div v-if="expressTrace" class="order-express-result">
+              <div v-if="expressTrace.deliveryStatusText">
+                {{ $t('mall_order.text.detail_express_status', { status: expressTrace.deliveryStatusText }) }}
+              </div>
+              <div
+                v-if="expressTrace.message && (!expressTrace.traces || expressTrace.traces.length === 0)"
+                class="order-express-message"
+              >{{ expressTrace.message }}</div>
+              <div
+                v-for="(item, index) in expressTrace.traces"
+                :key="index"
+                class="order-express-trace"
+              >
+                <div class="order-express-time">{{ item.time }}</div>
+                <div>{{ item.context }}</div>
+              </div>
+            </div>
           </el-form-item>
           <el-form-item :label="$t('mall_order.form.detail_refund_info')">
             <span>{{ $t('mall_order.text.detail_refund_amount', { refund_amount: orderDetail.order.refundAmount }) }}</span>
@@ -287,7 +311,7 @@
 </style>
 
 <script>
-import { detailOrder, listOrder, listChannel, refundOrder, payOrder, deleteOrder, shipOrder } from '@/api/order'
+import { detailOrder, expressOrder, listOrder, listChannel, refundOrder, payOrder, deleteOrder, shipOrder } from '@/api/order'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import checkPermission from '@/utils/permission' // 权限判断函数
 
@@ -356,6 +380,9 @@ export default {
       },
       statusMap,
       orderDialogVisible: false,
+      expressLoading: false,
+      expressOrderId: undefined,
+      expressTrace: null,
       orderDetail: {
         order: {},
         user: {},
@@ -434,10 +461,39 @@ export default {
       this.getList()
     },
     handleDetail(row) {
+      this.expressTrace = null
+      this.expressLoading = false
+      this.expressOrderId = row.id
       detailOrder(row.id).then(response => {
         this.orderDetail = response.data.data
       })
       this.orderDialogVisible = true
+    },
+    handleExpress() {
+      const order = this.orderDetail.order
+      if (!order || !order.shipSn) {
+        return
+      }
+      const orderId = order.id
+      this.expressOrderId = orderId
+      this.expressLoading = true
+      expressOrder(orderId).then(response => {
+        if (this.expressOrderId !== orderId) {
+          return
+        }
+        this.expressTrace = response.data.data
+        this.expressLoading = false
+      }).catch(response => {
+        if (this.expressOrderId !== orderId) {
+          return
+        }
+        this.expressLoading = false
+        const errmsg = response && response.data && response.data.errmsg
+        this.$notify.error({
+          title: '失败',
+          message: errmsg || '暂时无法查询物流，请稍后再试'
+        })
+      })
     },
     handlePay(row) {
       this.payForm.orderId = row.id
@@ -565,3 +621,23 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.order-express-result {
+  margin-top: 12px;
+  clear: both;
+}
+.order-express-message {
+  color: #666;
+  line-height: 22px;
+}
+.order-express-trace {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 22px;
+}
+.order-express-time {
+  color: #999;
+  font-size: 12px;
+}
+</style>
