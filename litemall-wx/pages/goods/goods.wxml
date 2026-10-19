@@ -1,7 +1,7 @@
 <view class="container">
-  <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+  <swiper class="goodsimgs" indicator-dots="true" indicator-color="rgba(0,0,0,0.25)" indicator-active-color="rgba(0,0,0,0.65)" autoplay="true" interval="3000" duration="1000">
     <swiper-item wx:for="{{goods.gallery}}" wx:key="*this">
-      <image src="{{item}}" background-size="cover"></image>
+      <image src="{{item}}" mode="aspectFill"></image>
     </swiper-item>
   </swiper>
   <!-- 分享 -->

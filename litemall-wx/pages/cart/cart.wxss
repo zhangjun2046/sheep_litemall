@@ -143,32 +143,32 @@ page {
 }
 
 .cart-view .item .t {
-  margin: 8rpx 0;
-  height: 28rpx;
+  margin: 4rpx 0 2rpx;
+  height: 36rpx;
   font-size: 25rpx;
   color: #333;
   overflow: hidden;
 }
 
 .cart-view .item .name {
-  height: 28rpx;
+  height: 36rpx;
   max-width: 310rpx;
-  line-height: 28rpx;
+  line-height: 36rpx;
   font-size: 25rpx;
   color: #333;
   overflow: hidden;
 }
 
 .cart-view .item .num {
-  height: 28rpx;
-  line-height: 28rpx;
+  height: 36rpx;
+  line-height: 36rpx;
   float: right;
 }
 
 .cart-view .item .attr {
-  margin-bottom: 17rpx;
-  height: 24rpx;
-  line-height: 24rpx;
+  margin-bottom: 8rpx;
+  height: 32rpx;
+  line-height: 32rpx;
   font-size: 22rpx;
   color: #666;
   overflow: hidden;

@@ -8,7 +8,7 @@ Page({
   data: {
     userInfo: {
       nickName: '点击登录',
-      avatarUrl: '/static/images/my.png'
+      avatarUrl: ''
     },
     order: {
       unpaid: 0,
@@ -31,9 +31,12 @@ Page({
 
     //获取用户的登录信息
     if (app.globalData.hasLogin) {
-      let userInfo = wx.getStorageSync('userInfo');
+      let userInfo = wx.getStorageSync('userInfo') || {};
       this.setData({
-        userInfo: userInfo,
+        userInfo: {
+          nickName: userInfo.nickName || '微信用户',
+          avatarUrl: userInfo.avatarUrl || ''
+        },
         hasLogin: true
       });
 

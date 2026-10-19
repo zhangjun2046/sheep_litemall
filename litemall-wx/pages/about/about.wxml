@@ -1,49 +1,43 @@
 <view class="container">
-
-  <view class="brand-info">
-    <view class="name" wx:if="{{picUrl}}">
-      <image class="img" src="{{picUrl}}" background-size="cover" mode="aspectFill"></image>
-    </view>
-    <view class="desc" wx:if="{{desc}}">
-      {{desc}}
-    </view>
+  <view class="hero" wx:if="{{picUrl}}">
+    <image class="hero-img" src="{{picUrl}}" mode="aspectFill"></image>
   </view>
 
-  <view class="label">品牌名称:</view>
-  <view class="about-item">
-    <view class="item-left">
-      <text>{{name}}</text> 
-    </view>
+  <view class="intro" wx:if="{{desc}}">
+    <text class="intro-text">{{desc}}</text>
   </view>
 
-  <view class="label">公司地址:</view>
-  <view class="about-item">
-    <view class="item-left">
-      <text>{{address}}</text> 
+  <view class="card">
+    <view class="card-title">联系方式</view>
+    <view class="row" bindtap="showLocation">
+      <view class="icon-wrap">
+        <van-icon name="location-o" color="#b4282d" size="34rpx" />
+      </view>
+      <view class="row-main">
+        <text class="row-label">公司地址</text>
+        <text class="row-value">{{address}}</text>
+      </view>
+      <text class="row-action">地图</text>
     </view>
-    <view class="item-right" bindtap="showLocation">
-      <van-icon class="right-icon" name="location-o" />    
+    <view class="row" bindtap="callPhone">
+      <view class="icon-wrap">
+        <van-icon name="phone-o" color="#b4282d" size="34rpx" />
+      </view>
+      <view class="row-main">
+        <text class="row-label">电话号码</text>
+        <text class="row-value">{{phone}}</text>
+      </view>
+      <text class="row-action">拨打</text>
+    </view>
+    <view class="row row-last" bindtap="copyQQ">
+      <view class="icon-wrap">
+        <van-icon name="friends-o" color="#b4282d" size="34rpx" />
+      </view>
+      <view class="row-main">
+        <text class="row-label">QQ交流群</text>
+        <text class="row-value">{{qq}}</text>
+      </view>
+      <text class="row-action">复制</text>
     </view>
   </view>
-
-  <view class="label">电话号码:</view>
-  <view class="about-item">
-    <view class="item-left">
-      <text>{{phone}}</text> 
-    </view>
-    <view class="item-right" bindtap="callPhone">
-      <van-icon class="right-icon" name="phone-o" />
-    </view>
-  </view>
-
-  <view class="label">QQ交流群: </view>
-  <view class="about-item">
-    <view class="item-left">
-      <text>{{qq}}</text> 
-    </view>
-    <view class="item-right" bindtap="copyQQ">
-      <van-icon class="right-icon" name="friends-o" />
-    </view>
-  </view>
-
 </view>

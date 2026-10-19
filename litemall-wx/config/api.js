@@ -64,9 +64,10 @@ module.exports = {
   AddressSave: WxApiRoot + 'address/save', //保存收货地址
   AddressDelete: WxApiRoot + 'address/delete', //保存收货地址
 
-  ExpressQuery: WxApiRoot + 'express/query', //物流查询
+  OrderExpress: WxApiRoot + 'order/express', //订单物流轨迹
 
   RegionList: WxApiRoot + 'region/list', //获取区域列表
+  RegionChain: WxApiRoot + 'region/chain', //按区县编码回填省市区
 
   OrderSubmit: WxApiRoot + 'order/submit', // 提交订单
   OrderPrepay: WxApiRoot + 'order/prepay', // 订单的预支付会话

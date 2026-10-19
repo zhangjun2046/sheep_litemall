@@ -1,0 +1,14 @@
+<view class="container">
+  <view class="summary" wx:if="{{expName || expNo || deliveryStatusText}}">
+    <view class="line" wx:if="{{expName}}">快递公司：{{expName}}</view>
+    <view class="line" wx:if="{{expNo}}">物流单号：{{expNo}}</view>
+    <view class="line" wx:if="{{deliveryStatusText}}">当前状态：{{deliveryStatusText}}</view>
+  </view>
+  <view class="message" wx:if="{{message && traces.length === 0}}">{{message}}</view>
+  <view class="traces" wx:if="{{traces.length > 0}}">
+    <view class="trace" wx:for="{{traces}}" wx:key="time">
+      <view class="time">{{item.time}}</view>
+      <view class="context">{{item.context}}</view>
+    </view>
+  </view>
+</view>

@@ -1,15 +1,17 @@
 .container {
-  margin-bottom: 100rpx;
+  margin-bottom: 0;
+  padding-bottom: calc(120rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
 }
 
 .goodsimgs {
   width: 750rpx;
-  height: 750rpx;
+  height: 560rpx;
 }
 
 .goodsimgs image {
   width: 750rpx;
-  height: 750rpx;
+  height: 560rpx;
 }
 
 .commodity_screen {
@@ -534,7 +536,6 @@
   width: 750rpx;
   height: auto;
   overflow: hidden;
-  padding-bottom: 80rpx;
 }
 
 .related-goods .h {
@@ -608,7 +609,8 @@
 .related-goods .item .price {
   display: block;
   width: 311.45rpx;
-  height: 30rpx;
+  height: auto;
+  line-height: 40rpx;
   text-align: center;
   font-size: 30rpx;
   color: #b4282d;
@@ -622,6 +624,10 @@
   width: 750rpx;
   height: 100rpx;
   display: flex;
+  align-items: stretch;
+  box-sizing: content-box;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   background: #fff;
 }
 
@@ -629,7 +635,7 @@
   float: left;
   height: 100rpx;
   width: 90rpx;
-  border: 1px solid #f4f4f4;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -643,8 +649,10 @@
   flex-wrap: wrap;
   line-height: 1;
   background: #fff;
+  border: none;
   border-radius: 0;
   height: 55rpx;
+  padding: 0;
 }
  
 .bottom-btn .l .l-contact:after {
@@ -653,8 +661,6 @@
 }
 
 .bottom-btn .l.l-collect {
-  border-right: none;
-  border-left: none;
   text-align: center;
 }
 
@@ -746,7 +752,10 @@
   background: #fff;
   position: fixed;
   z-index: 9;
-  bottom: 100rpx;
+  bottom: calc(100rpx + constant(safe-area-inset-bottom));
+  bottom: calc(100rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .attr-pop .close {
@@ -890,7 +899,9 @@
   background: #fff;
   position: fixed;
   z-index: 9;
-  bottom: 100rpx;
+  bottom: calc(100rpx + constant(safe-area-inset-bottom));
+  bottom: calc(100rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
 .share-pop .close {

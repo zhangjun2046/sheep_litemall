@@ -26,19 +26,28 @@ Page({
   },
   onPullDownRefresh() {
     wx.showNavigationBarLoading() //在标题栏中显示加载
-    this.getCartList();
+    if (this.isLoggedIn()) {
+      this.getCartList();
+    }
     wx.hideNavigationBarLoading() //完成停止加载
     wx.stopPullDownRefresh() //停止下拉刷新
   },
+  isLoggedIn: function() {
+    var loggedIn = !!(app.globalData.hasLogin && wx.getStorageSync('token'));
+    if (!loggedIn) {
+      app.globalData.hasLogin = false;
+    }
+    return loggedIn;
+  },
   onShow: function() {
-    // 页面显示
-    if (app.globalData.hasLogin) {
+    // 页面显示。未登录只展示提示，不请求购物车，避免反复进入登录页
+    var loggedIn = this.isLoggedIn();
+    this.setData({
+      hasLogin: loggedIn
+    });
+    if (loggedIn) {
       this.getCartList();
     }
-
-    this.setData({
-      hasLogin: app.globalData.hasLogin
-    });
 
   },
   onHide: function() {

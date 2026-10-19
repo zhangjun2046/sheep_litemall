@@ -1,79 +1,99 @@
-/* about.wxss */
-
 page {
   background: #f4f4f4;
 }
 
-.brand-info {
-  width: 100%;
-  margin-bottom: 10rpx;
+.container {
+  padding-bottom: calc(40rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
 }
 
-.brand-info .name {
-  width: 100%;
-  height: 290rpx;
-  position: relative;
-}
-
-.brand-info .img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 290rpx;
-}
-
-.brand-info .desc {
-  background: #fff;
-  width: 100%;
-  height: auto;
+.hero {
+  height: 360rpx;
   overflow: hidden;
-  padding: 41.5rpx 31.25rpx;
-  box-sizing: border-box;
-  font-size: 30rpx;
+}
+
+.hero-img {
+  width: 100%;
+  height: 360rpx;
+}
+
+.intro {
+  margin: 24rpx 24rpx 0;
+  padding: 32rpx 28rpx;
+  background: #fff;
+  border-radius: 16rpx;
+}
+
+.intro-text {
+  display: block;
+  font-size: 28rpx;
+  line-height: 44rpx;
   color: #666;
-  line-height: 41.5rpx;
   text-align: center;
 }
 
-.label {
-  font-size: 26rpx;
-  margin-left: 20rpx;
-  padding: 10rpx 0;
-} 
+.card {
+  margin: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
 
+.card-title {
+  padding: 28rpx 28rpx 8rpx;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  color: #333;
+}
 
-.about-item{
-  background: white;
-  border-top: solid #f2f2f2 0.5rpx;
-  border-bottom: solid #f2f2f2 0.5rpx;
-  width: 100%;
-  min-height: 100rpx;
-  height: auto;
-  padding: 16rpx 0;
-  box-sizing: border-box;
+.row {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  padding: 24rpx 28rpx;
+  border-bottom: 1rpx solid #f3f3f3;
 }
 
-.item-left{
-  font-size: 32rpx;
-  margin-left: 40rpx;
-  margin-right: 20rpx;
-  margin-top: auto;
-  margin-bottom: auto;
-  word-break: break-all;
+.row-last {
+  border-bottom: none;
+}
+
+.icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 32rpx;
+  background: #f8f1ea;
+}
+
+.row-main {
   flex: 1;
+  min-width: 0;
+  margin-left: 20rpx;
+  margin-right: 16rpx;
 }
 
-.item-right{
-  margin-right: 15rpx;
-  margin-top: auto;
-  margin-bottom: auto;
+.row-label {
+  display: block;
+  font-size: 22rpx;
+  line-height: 32rpx;
+  color: #999;
 }
-.right-icon{
-  width: 40rpx;
-  height: 40rpx;
+
+.row-value {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  color: #333;
+  word-break: break-all;
+}
+
+.row-action {
+  flex-shrink: 0;
+  font-size: 24rpx;
+  line-height: 34rpx;
+  color: #b4282d;
 }

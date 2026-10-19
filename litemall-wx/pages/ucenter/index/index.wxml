@@ -1,6 +1,9 @@
 <view class="container">
   <view class="profile-info" bindtap="goLogin">
-    <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+    <view class="avatar-wrap">
+      <image wx:if="{{userInfo.avatarUrl}}" class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <van-icon wx:else name="contact" color="#ab956d" size="72rpx" />
+    </view>
     <view class="info">
       <text class="name">{{userInfo.nickName}}</text>
     </view>

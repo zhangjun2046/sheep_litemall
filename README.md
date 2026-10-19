@@ -10,6 +10,7 @@
 
 ## 本仓库近期改动
 
+* 使用 Grok 4.6：管理端「行政区域」支持增删改（物理删除、有下级不可删）；小程序新建/编辑地址优先读取 `litemall_region`，接口失败时回落本地 `area.js`；保存地址按区县编码校验并回写库中名称。不改 `renard-wx`
 * 使用 Gemini4 Argon 在不改动后端与数据库的前提下，优化小程序「关于我们」页面（pages/about/about），顶部复用「品牌商详情」的品牌横幅与简介卡片，下部保留并优化商场配置信息（地址、电话、QQ）的多行自适应展示
 * 使用 Grok 4.5 隐藏登录页用户名和密码填充和展示
 * 使用Gemini 4 Argon 修复微信小程序意见反馈页面在软键盘弹出时的布局错乱、输入框宽度溢出、浮动未清除及字数统计不准确问题
@@ -111,7 +112,9 @@ Spring Boot 优先级：**jar 同目录（或 `./config/`）的 `application.yml
 - 若仍激活 `core` 等 profile，两边会合并，但外部文件里写过的键覆盖 jar 内值。
 
 因此服务器目录下那份 `enable: false`、模板「待补充」会盖掉 `application-core.yml` 里已填的短信/支付。线上改短信或支付，改服务器 yml 后重启；不要以为只改仓库里的 `application-core.yml` 就会在现网生效。
-启动命令 nohup java -Dfile.encoding=UTF-8 -jar litemall.jar > log.log 2>&1 &
+
+启动命令  `nohup java -Dfile.encoding=UTF-8 -jar litemall.jar > log.log 2>&1 & `
+
 ## 警告
 
 1. 本项目主要用于学习与业务实践

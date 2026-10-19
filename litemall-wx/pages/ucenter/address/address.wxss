@@ -13,7 +13,8 @@ page {
   padding-left: 31.25rpx;
   background: #fff;
   background-size: auto 10.5rpx;
-  margin-bottom: 90rpx;
+  margin-bottom: calc(104rpx + constant(safe-area-inset-bottom));
+  margin-bottom: calc(104rpx + env(safe-area-inset-bottom));
 }
 
 .address-list .item {
@@ -88,31 +89,25 @@ page {
 }
 
 .add-address {
-  border: none;
-  right: 0;
+  position: fixed;
+  left: 32rpx;
+  right: 32rpx;
+  bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom);
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
-  height: 90rpx;
-  line-height: 98rpx;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border-radius: 0;
-  padding: 0;
+  width: auto;
+  height: 88rpx;
   margin: 0;
-  margin-left: 5%;
-  text-align: center;
-  /* padding-left: -5rpx; */
-  font-size: 25rpx;
-  color: #f4f4f4;
-  border-top-left-radius: 50rpx;
-  border-bottom-left-radius: 50rpx;
-  border-top-right-radius: 50rpx;
-  border-bottom-right-radius: 50rpx;
+  padding: 0;
+  border: none;
+  border-radius: 44rpx;
+  font-size: 30rpx;
   letter-spacing: 3rpx;
-  background-image: linear-gradient(to right, #9a9ba1 0%, #9a9ba1 100%);
+  color: #fff;
+  background: #b4282d;
 }
 
 .empty-view {

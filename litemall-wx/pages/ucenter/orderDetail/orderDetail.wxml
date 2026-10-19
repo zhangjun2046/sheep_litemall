@@ -80,10 +80,11 @@
     </view>
   </view>
 
-  <view class="order-express" bindtap="copyExpNo" wx:if="{{ orderInfo.expNo }}">
+  <view class="order-express" bindtap="goExpress" wx:if="{{ orderInfo.expNo }}">
     <view class="title">
       <view class="t">快递公司：{{orderInfo.expName}}</view>
       <view class="b">物流单号：{{orderInfo.expNo}}</view>
     </view>
+    <van-icon class="ti" name="arrow" color="#a78845" />
   </view>
 </view>

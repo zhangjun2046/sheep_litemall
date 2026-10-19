@@ -10,6 +10,7 @@
     "pages/ucenter/footprint/footprint",
     "pages/ucenter/order/order",
     "pages/ucenter/orderDetail/orderDetail",
+    "pages/ucenter/logistics/logistics",
     "pages/ucenter/couponList/couponList",
     "pages/ucenter/couponSelect/couponSelect",
     "pages/ucenter/collect/collect",

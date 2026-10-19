@@ -14,7 +14,7 @@ VantComponent({
             observer: 'setComputedPreviewSize'
         },
         name: {
-            type: [Number, String],
+            type: String,
             value: ''
         },
         accept: {

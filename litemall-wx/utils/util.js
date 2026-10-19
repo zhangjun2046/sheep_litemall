@@ -74,10 +74,24 @@ function request(url, data = {}, method = "GET") {
             } catch (e) {
               // Do something when catch error
             }
-            // 切换到登录页面
-            wx.navigateTo({
-              url: '/pages/auth/login/login'
-            });
+            var application = getApp();
+            if (application && application.globalData) {
+              application.globalData.hasLogin = false;
+            }
+            var pages = getCurrentPages();
+            var current = pages.length ? pages[pages.length - 1] : null;
+            var route = current && current.route ? current.route : '';
+            // 购物车未登录时停在当前页，由页面自己展示“去登录”
+            if (route === 'pages/cart/cart') {
+              current.setData({
+                hasLogin: false,
+                cartGoods: []
+              });
+            } else if (route !== 'pages/auth/login/login') {
+              wx.navigateTo({
+                url: '/pages/auth/login/login'
+              });
+            }
           } else {
             resolve(upgradeHttpInData(res.data));
           }

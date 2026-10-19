@@ -21,20 +21,12 @@ Page({
     wx.hideNavigationBarLoading() //完成停止加载
     wx.stopPullDownRefresh() //停止下拉刷新
   },
-  copyExpNo: function() {
-    var expNo = this.data.orderInfo && this.data.orderInfo.expNo;
-    if (!expNo) {
+  goExpress: function() {
+    if (!this.data.orderId) {
       return;
     }
-    wx.setClipboardData({
-      data: String(expNo),
-      success: function() {
-        wx.hideToast();
-        wx.showToast({
-          title: '已粘贴',
-          icon: 'none'
-        });
-      }
+    wx.navigateTo({
+      url: '/pages/ucenter/logistics/logistics?orderId=' + this.data.orderId
     });
   },
   getOrderDetail: function() {

@@ -20,25 +20,35 @@ page {
   font-size: 28rpx;
 }
 
-.profile-info .avatar {
-  height: 148rpx;
-  width: 148rpx;
+.avatar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 120rpx;
+  height: 120rpx;
   border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+}
+
+.profile-info .avatar {
+  width: 120rpx;
+  height: 120rpx;
 }
 
 .profile-info .info {
   flex: 1;
-  height: 85rpx;
+  display: flex;
+  align-items: center;
   padding-left: 31.25rpx;
 }
 
 .profile-info .name {
   display: block;
-  height: 45rpx;
-  line-height: 45rpx;
+  line-height: 48rpx;
   color: #fff;
   font-size: 37.5rpx;
-  margin-bottom: 10rpx;
 }
 
 .profile-info .level {

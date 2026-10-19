@@ -1,0 +1,46 @@
+page {
+  height: 100%;
+  background: #f4f4f4;
+}
+
+.summary {
+  background: #fff;
+  padding: 24rpx 31rpx;
+}
+
+.summary .line {
+  font-size: 29rpx;
+  line-height: 48rpx;
+  color: #a78845;
+}
+
+.message {
+  margin-top: 20rpx;
+  background: #fff;
+  padding: 32rpx 31rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.traces {
+  margin-top: 20rpx;
+  background: #fff;
+  padding: 8rpx 31rpx 24rpx;
+}
+
+.trace {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f4f4f4;
+}
+
+.trace .time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.trace .context {
+  margin-top: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 40rpx;
+}
