@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class WuliuService {
     private static final DateTimeFormatter TRACE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final String MSG_SF_ONLY = "本期仅支持顺丰";
+    private static final String MSG_SF_ONLY = "暂不支持";
     private static final String MSG_NO_SN = "暂无快递单号";
     private static final String MSG_PHONE = "收货手机号不足四位，无法查询顺丰";
     private static final String MSG_UNCONFIGURED = "物流查询未配置";
