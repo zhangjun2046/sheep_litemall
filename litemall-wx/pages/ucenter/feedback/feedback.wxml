@@ -9,7 +9,7 @@
     </view>
   </picker>
   <view class="fb-body">
-    <textarea class="content" placeholder="对我们网站、商品、服务，你还有什么建议吗？你还希望在商城上买到什么？请告诉我们..." bindinput="contentInput" maxlength="500" value="{{content}}" />
+    <textarea class="content" placeholder="对我们商品、服务，你还有什么建议吗？你还希望在商城上买到什么？请告诉我们..." bindinput="contentInput" maxlength="500" value="{{content}}" />
     <view class="fb-body-footer">
       <view class="weui-uploader__files" id="uploaderFiles">
         <block wx:for="{{files}}" wx:key="*this">

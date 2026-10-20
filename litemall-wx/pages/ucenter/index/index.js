@@ -8,8 +8,9 @@ Page({
   data: {
     userInfo: {
       nickName: '点击登录',
-      avatarUrl: ''
+      avatarUrl: '/static/images/avatar.png'
     },
+    mobile: '',
     order: {
       unpaid: 0,
       unship: 0,
@@ -35,21 +36,39 @@ Page({
       this.setData({
         userInfo: {
           nickName: userInfo.nickName || '微信用户',
-          avatarUrl: userInfo.avatarUrl || ''
+          avatarUrl: '/static/images/avatar.png'
         },
         hasLogin: true
       });
-
-      let that = this;
-      util.request(api.UserIndex).then(function(res) {
-        if (res.errno === 0) {
-          that.setData({
-            order: res.data.order
-          });
+      this.loadProfile();
+    } else {
+      this.setData({
+        hasLogin: false,
+        mobile: '',
+        userInfo: {
+          nickName: '点击登录',
+          avatarUrl: '/static/images/avatar.png'
         }
       });
     }
 
+  },
+  loadProfile: function() {
+    let that = this;
+    util.request(api.UserIndex).then(function(res) {
+      if (res.errno === 0) {
+        that.setData({
+          order: res.data.order
+        });
+      }
+    });
+    util.request(api.AuthInfo).then(function(res) {
+      if (res.errno === 0 && res.data) {
+        that.setData({
+          mobile: res.data.mobile || ''
+        });
+      }
+    });
   },
   onHide: function() {
     // 页面隐藏
@@ -183,6 +202,7 @@ Page({
       return;
     }
 
+    let that = this;
     util.request(api.AuthBindPhone, {
       iv: e.detail.iv,
       encryptedData: e.detail.encryptedData
@@ -193,7 +213,13 @@ Page({
           icon: 'success',
           duration: 2000
         });
+        that.loadProfile();
       }
+    });
+  },
+  goPrivacy: function() {
+    wx.navigateTo({
+      url: '/pages/ucenter/agreement/agreement?tab=privacy'
     });
   },
   goAfterSale: function() {
