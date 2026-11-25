@@ -1,0 +1,68 @@
+{
+	"pages": [
+		{
+			"path": "pages/home/home",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "蒙关牧 移动端管理系统"
+			}
+		},
+		{
+			"path": "pages/order/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "订单",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/order/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "订单详情",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/aftersale/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "售后",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/aftersale/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "售后详情",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#F5F6FA" 
+	},
+	"uniIdRouter": {},
+	// UI库-uview-plus的配置
+	"easycom": {
+			// 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
+			"custom": {
+				"^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+				"^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+		        "^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue"
+			}
+	}
+}
