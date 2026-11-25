@@ -63,6 +63,12 @@ public class AdminAftersaleController {
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
         List<LitemallAftersale> aftersaleList = aftersaleService.querySelective(orderId, aftersaleSn, status, page, limit, sort, order);
+        for (LitemallAftersale aftersale : aftersaleList) {
+            LitemallOrder relatedOrder = orderService.findById(aftersale.getOrderId());
+            if (relatedOrder != null) {
+                aftersale.setOrderSn(relatedOrder.getOrderSn());
+            }
+        }
         return ResponseUtil.okList(aftersaleList);
     }
 

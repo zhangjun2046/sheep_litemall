@@ -218,8 +218,8 @@ public class LitemallOrderService {
         if (!StringUtils.isEmpty(consignee)) {
             querys.add(" o.consignee like '%" + consignee + "%' ");
         }
-        if (!StringUtils.isEmpty(orderSn)) {
-            querys.add(" o.order_sn = '" + orderSn + "' ");
+        if (!StringUtils.isEmpty(orderSn) && !StringUtils.isEmpty(orderSn.trim())) {
+            querys.add(sqlLikeContains("o.order_sn", orderSn.trim()));
         }
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if (start != null) {
@@ -259,5 +259,17 @@ public class LitemallOrderService {
         data.put("limit", list1.getPageSize());
         data.put("pages", list1.getPages());
         return data;
+    }
+
+    /**
+     * 拼进现有字符串 SQL 的模糊条件。转义引号和 LIKE 通配符，避免搜索框改写语句。
+     */
+    private static String sqlLikeContains(String column, String raw) {
+        String keyword = raw
+                .replace("\\", "\\\\\\\\")
+                .replace("'", "''")
+                .replace("%", "\\\\%")
+                .replace("_", "\\\\_");
+        return column + " like '%" + keyword + "%' escape '\\\\'";
     }
 }

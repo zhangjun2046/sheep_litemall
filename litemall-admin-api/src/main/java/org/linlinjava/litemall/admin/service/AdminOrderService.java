@@ -243,6 +243,43 @@ public class AdminOrderService {
     }
 
     /**
+     * 已发货订单只改快递单号。不改状态、发货时间和快递公司，不重复发送发货短信。
+     *
+     * @param body { orderId, shipSn }
+     */
+    public Object updateShipSn(String body) {
+        Integer orderId = JacksonUtil.parseInteger(body, "orderId");
+        String shipSn = JacksonUtil.parseString(body, "shipSn");
+        if (orderId == null || shipSn == null) {
+            return ResponseUtil.badArgument();
+        }
+        shipSn = shipSn.trim();
+        if (shipSn.isEmpty()) {
+            return ResponseUtil.badArgument();
+        }
+
+        LitemallOrder order = orderService.findById(orderId);
+        if (order == null) {
+            return ResponseUtil.badArgument();
+        }
+        if (!OrderUtil.STATUS_SHIP.equals(order.getOrderStatus())) {
+            return ResponseUtil.fail(ORDER_CONFIRM_NOT_ALLOWED, "订单不能修改快递单号");
+        }
+        if (shipSn.equals(order.getShipSn())) {
+            return ResponseUtil.fail(ORDER_CONFIRM_NOT_ALLOWED, "快递单号没有变化");
+        }
+
+        String oldSn = order.getShipSn();
+        order.setShipSn(shipSn);
+        if (orderService.updateWithOptimisticLocker(order) == 0) {
+            return ResponseUtil.updatedDateExpired();
+        }
+
+        logHelper.logOrderSucceed("修改快递单号", "订单编号 " + order.getOrderSn() + "，原单号 " + oldSn + "，新单号 " + shipSn);
+        return ResponseUtil.ok();
+    }
+
+    /**
      * 删除订单
      * 1. 检测当前订单是否能够删除
      * 2. 删除订单

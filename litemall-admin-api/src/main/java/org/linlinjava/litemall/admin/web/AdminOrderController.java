@@ -116,6 +116,15 @@ public class AdminOrderController {
         return adminOrderService.ship(body);
     }
 
+    /**
+     * 已发货订单修改快递单号。复用发货权限，不单独注册按钮。
+     */
+    @RequiresPermissions("admin:order:ship")
+    @PostMapping("/ship-sn")
+    public Object updateShipSn(@RequestBody String body) {
+        return adminOrderService.updateShipSn(body);
+    }
+
     @RequiresPermissions("admin:order:pay")
     @RequiresPermissionsDesc(menu = {"商场管理", "订单管理"}, button = "订单收款")
     @PostMapping("/pay")
