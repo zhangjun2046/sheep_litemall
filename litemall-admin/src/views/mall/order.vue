@@ -95,6 +95,7 @@
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">{{ $t('app.button.delete') }}</el-button>
           <el-button type="warning" size="mini" @click="handlePay(scope.row)">{{ $t('mall_order.button.pay') }}</el-button>
           <el-button type="primary" size="mini" @click="handleShip(scope.row)">{{ $t('mall_order.button.ship') }}</el-button>
+          <el-button v-if="scope.row.orderStatus == 301" type="primary" size="mini" class="ship-sn-btn" @click="handleUpdateShipSn(scope.row)">改单号</el-button>
           <el-button type="danger" size="mini" @click="handleRefund(scope.row)">{{ $t('mall_order.button.refund') }}</el-button>
         </template>
       </el-table-column>
@@ -249,6 +250,19 @@
       </div>
     </el-dialog>
 
+    <!-- 修改快递单号 -->
+    <el-dialog :visible.sync="shipSnDialogVisible" title="修改快递单号">
+      <el-form ref="shipSnForm" :model="shipSnForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="快递单号" prop="shipSn">
+          <el-input v-model="shipSnForm.shipSn" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="shipSnDialogVisible = false">{{ $t('app.button.cancel') }}</el-button>
+        <el-button type="primary" @click="confirmUpdateShipSn">{{ $t('app.button.confirm') }}</el-button>
+      </div>
+    </el-dialog>
+
     <!-- 退款对话框 -->
     <el-dialog :visible.sync="refundDialogVisible" :title="$t('mall_order.dialog.refund')">
       <el-form ref="refundForm" :model="refundForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
@@ -281,6 +295,10 @@
   margin-left: 1px;
 }
 
+.oper .ship-sn-btn {
+  width: auto;
+}
+
 ::v-deep .el-table__expanded-cell {
   padding: 6px 80px;
 }
@@ -311,7 +329,7 @@
 </style>
 
 <script>
-import { detailOrder, expressOrder, listOrder, listChannel, refundOrder, payOrder, deleteOrder, shipOrder } from '@/api/order'
+import { detailOrder, expressOrder, listOrder, listChannel, refundOrder, payOrder, deleteOrder, shipOrder, updateShipSn } from '@/api/order'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import checkPermission from '@/utils/permission' // 权限判断函数
 
@@ -394,6 +412,11 @@ export default {
         shipSn: undefined
       },
       shipDialogVisible: false,
+      shipSnForm: {
+        orderId: undefined,
+        shipSn: undefined
+      },
+      shipSnDialogVisible: false,
       payForm: {
         orderId: undefined,
         orderSn: '',
@@ -542,6 +565,37 @@ export default {
       this.shipDialogVisible = true
       this.$nextTick(() => {
         this.$refs['shipForm'].clearValidate()
+      })
+    },
+    handleUpdateShipSn(row) {
+      this.shipSnForm.orderId = row.id
+      this.shipSnForm.shipSn = row.shipSn
+      this.shipSnDialogVisible = true
+    },
+    confirmUpdateShipSn() {
+      const shipSn = (this.shipSnForm.shipSn || '').trim()
+      if (!shipSn) {
+        this.$notify.error({
+          title: '失败',
+          message: '请填写快递单号'
+        })
+        return
+      }
+      updateShipSn({
+        orderId: this.shipSnForm.orderId,
+        shipSn
+      }).then(() => {
+        this.shipSnDialogVisible = false
+        this.$notify.success({
+          title: '成功',
+          message: '快递单号已修改'
+        })
+        this.getList()
+      }).catch(response => {
+        this.$notify.error({
+          title: '失败',
+          message: (response.data && response.data.errmsg) || '修改失败'
+        })
       })
     },
     confirmShip() {

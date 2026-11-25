@@ -36,6 +36,14 @@ export function shipOrder(data) {
   })
 }
 
+export function updateShipSn(data) {
+  return request({
+    url: '/order/ship-sn',
+    method: 'post',
+    data
+  })
+}
+
 export function refundOrder(data) {
   return request({
     url: '/order/refund',
