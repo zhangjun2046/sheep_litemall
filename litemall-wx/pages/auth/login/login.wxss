@@ -3,7 +3,7 @@
   height: auto;
   overflow: hidden;
   padding: 0 40rpx;
-  margin-top: 200rpx;
+  margin-top: 360rpx;
   background: #fff;
 }
 

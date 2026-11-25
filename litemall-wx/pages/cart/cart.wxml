@@ -17,7 +17,7 @@
         <view class="group-item">
           <view class="goods">
             <view class="item {{isEditCart ? 'edit' : ''}}" wx:for="{{cartGoods}}" wx:key="id">
-              <van-checkbox value="{{ item.checked }}" bind:change="checkedItem" data-item-index="{{index}}"></van-checkbox>
+              <van-checkbox checked-color="#ab956d" value="{{ item.checked }}" bind:change="checkedItem" data-item-index="{{index}}"></van-checkbox>
               <view class="cart-goods">
                 <image class="img" src="{{item.picUrl}}"></image>
                 <view class="info">
@@ -25,7 +25,7 @@
                     <text class="name">{{item.goodsName}}</text>
                     <text class="num">x{{item.number}}</text>
                   </view>
-                  <view class="attr">{{ isEditCart ? '已选择:' : ''}}{{item.specifications||''}}</view>
+                  <view class="attr">{{item.specifications||''}}</view>
                   <view class="b">
                     <text class="price">￥{{item.price}}</text>
                     <view class="selnum">
@@ -42,7 +42,7 @@
 
       </view>
       <view class="cart-bottom">
-        <van-checkbox value="{{ checkedAllStatus }}" bind:change="checkedAll">全选（{{cartTotal.checkedGoodsCount}}）</van-checkbox>
+        <van-checkbox checked-color="#ab956d" value="{{ checkedAllStatus }}" bind:change="checkedAll">全选（{{cartTotal.checkedGoodsCount}}）</van-checkbox>
         <view class="total">{{!isEditCart ? '￥'+cartTotal.checkedGoodsAmount : ''}}</view>
         <view class='action_btn_area'>
           <view class="{{!isEditCart ? 'edit' : 'sure'}}" bindtap="editCart">{{!isEditCart ? '编辑' : '完成'}}</view>

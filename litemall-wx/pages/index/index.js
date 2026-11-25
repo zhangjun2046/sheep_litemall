@@ -14,7 +14,9 @@ Page({
     banner: [],
     bannerHeight: 417,
     coupon: [],
-    goodsCount: 0
+    goodsCount: 0,
+    goodsLoading: true,
+    skeletonList: [1, 2]
   },
 
   onShareAppMessage: function() {
@@ -58,6 +60,13 @@ Page({
         });
         that.updateBannerHeight(res.data.banner);
       }
+      that.setData({
+        goodsLoading: false
+      });
+    }).catch(function() {
+      that.setData({
+        goodsLoading: false
+      });
     });
     util.request(api.GoodsCount).then(function (res) {
       that.setData({

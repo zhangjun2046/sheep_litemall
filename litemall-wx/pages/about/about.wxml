@@ -9,7 +9,7 @@
 
   <view class="card">
     <view class="card-title">联系方式</view>
-    <view class="row" bindtap="showLocation">
+    <view class="row" bindtap="copyAddress">
       <view class="icon-wrap">
         <van-icon name="location-o" color="#b4282d" size="34rpx" />
       </view>
@@ -17,7 +17,7 @@
         <text class="row-label">公司地址</text>
         <text class="row-value">{{address}}</text>
       </view>
-      <text class="row-action">地图</text>
+      <text class="row-action">复制</text>
     </view>
     <view class="row" bindtap="callPhone">
       <view class="icon-wrap">

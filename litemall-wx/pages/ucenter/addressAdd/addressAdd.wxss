@@ -78,11 +78,14 @@ page {
 
 .add-address .cannel {
   margin-right: 24rpx;
-  background: #333;
+  color: #ab956d;
+  background: #fff;
+  border: 1rpx solid #ab956d;
 }
 
 .add-address .save {
-  background: #b4282d;
+  color: #f4f4f4;
+  background: #ab956d;
 }
 
 .region-select {

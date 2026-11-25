@@ -253,6 +253,31 @@ Page({
         addressId: options.id
       });
       this.getAddressDetail();
+    } else if (options.from === 'wechat') {
+      let draft = {};
+      try {
+        draft = wx.getStorageSync('wxAddressDraft') || {};
+        wx.removeStorageSync('wxAddressDraft');
+      } catch (e) {}
+      if (draft.notice) {
+        wx.showToast({
+          title: draft.notice,
+          icon: 'none'
+        });
+      }
+      this.setData({
+        address: {
+          id: 0,
+          areaCode: 0,
+          addressDetail: draft.addressDetail || '',
+          name: draft.name || '',
+          tel: draft.tel || '',
+          isDefault: draft.isDefault ? 1 : 0,
+          province: draft.province || '',
+          city: draft.city || '',
+          county: draft.county || ''
+        }
+      });
     }
   },
   onReady: function() {

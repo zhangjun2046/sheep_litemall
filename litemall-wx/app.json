@@ -98,5 +98,6 @@
     "van-checkbox": "./lib/vant-weapp/checkbox/index",
     "van-steps": "./lib/vant-weapp/steps/index"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "requiredPrivateInfos": ["chooseAddress"]
 }

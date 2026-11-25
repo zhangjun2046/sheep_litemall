@@ -79,23 +79,25 @@ Page({
       }
     });
   },
-  showLocation: function (e) {
-    var that = this;
-    var lat = parseFloat(that.data.latitude);
-    var lng = parseFloat(that.data.longitude);
-    if (isNaN(lat) || isNaN(lng)) {
+  copyAddress: function () {
+    var address = this.data.address;
+    if (!address) {
       wx.showToast({
-        title: '暂未配置地图坐标',
+        title: '暂无地址',
         icon: 'none'
       });
       return;
     }
-    wx.openLocation({
-      latitude: lat,
-      longitude: lng,
-      name: that.data.name,
-      address: that.data.address,
-    })
+    wx.setClipboardData({
+      data: String(address),
+      success: function () {
+        wx.hideToast();
+        wx.showToast({
+          title: '已复制',
+          icon: 'none'
+        });
+      }
+    });
   },
   callPhone: function (e) {
     var that = this

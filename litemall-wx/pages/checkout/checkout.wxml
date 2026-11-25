@@ -7,7 +7,7 @@
       </view>
       <view class="m">
         <text class="mobile">{{checkedAddress.tel}}</text>
-        <text class="address">{{checkedAddress.addressDetail}}</text>
+        <text class="address">{{checkedAddress.province}}{{checkedAddress.city}}{{checkedAddress.county}}{{checkedAddress.addressDetail}}</text>
       </view>
       <view class="r">
         <van-icon name="arrow" />

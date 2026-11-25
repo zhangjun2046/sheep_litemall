@@ -13,32 +13,35 @@ page {
   padding-left: 31.25rpx;
   background: #fff;
   background-size: auto 10.5rpx;
-  margin-bottom: calc(104rpx + constant(safe-area-inset-bottom));
-  margin-bottom: calc(104rpx + env(safe-area-inset-bottom));
+  margin-bottom: calc(136rpx + constant(safe-area-inset-bottom));
+  margin-bottom: calc(136rpx + env(safe-area-inset-bottom));
 }
 
 .address-list .item {
-  height: 156.55rpx;
+  min-height: 156.55rpx;
+  height: auto;
   align-items: center;
   display: flex;
+  padding: 24rpx 0;
   border-bottom: 1rpx solid #dcd9d9;
 }
 
 .address-list .l {
   width: 125rpx;
-  height: 80rpx;
-  overflow: hidden;
+  height: auto;
+  flex-shrink: 0;
+  overflow: visible;
 }
 
 .address-list .name {
   width: 125rpx;
-  height: 43rpx;
+  height: auto;
   font-size: 29rpx;
+  line-height: 40rpx;
   color: #333;
   margin-bottom: 5.2rpx;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .address-list .default {
@@ -55,24 +58,28 @@ page {
 .address-list .c {
   flex: 1;
   height: auto;
-  overflow: hidden;
+  min-width: 0;
+  padding-right: 12rpx;
+  overflow: visible;
 }
 
 .address-list .mobile {
-  height: 29rpx;
+  height: auto;
   font-size: 29rpx;
-  line-height: 29rpx;
-  overflow: hidden;
+  line-height: 40rpx;
   color: #333;
   margin-bottom: 6.25rpx;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .address-list .address {
-  height: 37rpx;
+  height: auto;
   font-size: 25rpx;
   line-height: 37rpx;
-  overflow: hidden;
   color: #666;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .address-list .r {
@@ -88,26 +95,38 @@ page {
   height: 52rpx;
 }
 
-.add-address {
+.address-bar {
   position: fixed;
-  left: 32rpx;
-  right: 32rpx;
-  bottom: constant(safe-area-inset-bottom);
-  bottom: env(safe-area-inset-bottom);
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 10;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: auto;
+  padding: 16rpx 32rpx;
+  padding-bottom: calc(16rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: #f4f4f4;
+}
+
+.bar-btn {
+  flex: 1;
   height: 88rpx;
-  margin: 0;
-  padding: 0;
-  border: none;
+  line-height: 88rpx;
+  text-align: center;
   border-radius: 44rpx;
-  font-size: 30rpx;
-  letter-spacing: 3rpx;
-  color: #fff;
-  background: #b4282d;
+  font-size: 28rpx;
+}
+
+.bar-btn.plain {
+  margin-right: 20rpx;
+  color: #ab956d;
+  background: #fff;
+  border: 1rpx solid #ab956d;
+}
+
+.bar-btn.solid {
+  color: #f4f4f4;
+  background: #ab956d;
 }
 
 .empty-view {
