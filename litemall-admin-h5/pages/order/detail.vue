@@ -6,6 +6,7 @@
 				<image v-if="item.picUrl" class="pic" :src="item.picUrl" mode="aspectFill"></image>
 				<view class="info">
 					<view class="name">{{ item.goodsName }}</view>
+					<view class="spec" v-if="item.goodsSn">商品编号 {{ item.goodsSn }}</view>
 					<view class="spec">{{ spec(item.specifications) }}</view>
 					<view class="meta">￥{{ item.price }} × {{ item.number }}</view>
 				</view>
@@ -25,15 +26,24 @@
 			<view class="row"><text class="label">运费</text><text>￥{{ order.freightPrice }}</text></view>
 			<view class="row"><text class="label">实付</text><text>￥{{ order.actualPrice }}</text></view>
 			<view class="row"><text class="label">状态</text><text class="warn">{{ statusText(order.orderStatus) }}</text></view>
+			<view class="row"><text class="label">支付渠道</text><text>微信支付</text></view>
 			<view class="row" v-if="order.payTime"><text class="label">支付时间</text><text>{{ timeText(order.payTime) }}</text></view>
+			<view class="row" v-if="order.shipChannel"><text class="label">快递公司</text><text>{{ channelText(order.shipChannel) }}</text></view>
+			<view class="row" v-if="order.shipSn">
+				<text class="label">快递信息</text>
+				<text class="express-btn" @click="openExpress">查看物流</text>
+			</view>
 			<view class="row" v-if="order.shipTime"><text class="label">发货时间</text><text>{{ timeText(order.shipTime) }}</text></view>
 			<view class="row" v-if="order.shipSn"><text class="label">快递单号</text><text class="value">{{ order.shipSn }}</text></view>
+			<view class="row" v-if="order.confirmTime"><text class="label">确认收货</text><text>{{ timeText(order.confirmTime) }}</text></view>
 			<view class="row" v-if="order.refundAmount"><text class="label">退款金额</text><text>￥{{ order.refundAmount }}</text></view>
+			<view class="row" v-if="order.refundType"><text class="label">退款类型</text><text class="value">{{ order.refundType }}</text></view>
+			<view class="row" v-if="order.refundContent"><text class="label">退款备注</text><text class="value">{{ order.refundContent }}</text></view>
 			<view class="row" v-if="order.refundTime"><text class="label">退款时间</text><text>{{ timeText(order.refundTime) }}</text></view>
 		</view>
 		<view class="actions">
 			<view v-if="order.orderStatus == 201" class="plain" @click="openShip(false)">填写单号</view>
-			<view v-if="order.orderStatus == 301" class="plain" @click="openShip(true)">修改单号</view>
+			<view v-if="canEditSn(order)" class="plain" @click="openShip(true)">修改单号</view>
 			<view v-if="order.orderStatus == 202" class="solid" @click="confirmRefund">同意退款</view>
 		</view>
 
@@ -50,12 +60,22 @@
 				</view>
 			</view>
 		</u-overlay>
+		<u-overlay :show="showResult" opacity="0.65">
+			<view class="overlay-view" @click.stop>
+				<view class="overlay-title">{{ result.editing ? '修改快递单号结果' : '发货结果' }}</view>
+				<view class="result-line">{{ resultLines.mall }}</view>
+				<view class="result-line">{{ resultLines.wx }}</view>
+				<view class="overlay-actions">
+					<view class="solid" @click.stop="closeResult">我知道了</view>
+				</view>
+			</view>
+		</u-overlay>
 	</view>
 </template>
 
 <script>
 import { detailOrder, shipOrder, updateShipSn, refundOrder } from '@/api/order'
-import { formatTime, orderStatusText, specText, showError } from '@/util/order'
+import { canEditShipSn, formatTime, getCurrentOrderId, orderStatusText, setCurrentOrderId, shipResultLines, specText, showError } from '@/util/order'
 
 export default {
 	data() {
@@ -65,11 +85,30 @@ export default {
 			goods: [],
 			showShip: false,
 			editing: false,
-			shipSn: ''
+			shipSn: '',
+			showResult: false,
+			result: {
+				editing: false,
+				orderSn: '',
+				mallOk: false,
+				mallReason: '',
+				wxExecuted: false,
+				wxOk: false,
+				wxMessage: ''
+			}
 		}
 	},
-	onLoad(options) {
-		this.id = options.id
+	computed: {
+		resultLines() {
+			return shipResultLines(this.result)
+		}
+	},
+	onLoad() {
+		this.id = getCurrentOrderId()
+		if (!this.id) {
+			uni.redirectTo({ url: '/pages/order/index' })
+			return
+		}
 		this.load()
 	},
 	methods: {
@@ -87,6 +126,20 @@ export default {
 				uni.makePhoneCall({ phoneNumber: String(this.order.mobile) })
 			}
 		},
+		channelText(code) {
+			if (!code) {
+				return ''
+			}
+			if (String(code).toUpperCase() === 'SF') {
+				return '顺丰速运'
+			}
+			return code
+		},
+		openExpress() {
+			setCurrentOrderId(this.order.id)
+			uni.navigateTo({ url: '/pages/order/express' })
+		},
+		canEditSn: canEditShipSn,
 		openShip(editing) {
 			this.editing = editing
 			this.shipSn = editing ? (this.order.shipSn || '') : ''
@@ -99,14 +152,18 @@ export default {
 				return
 			}
 			const run = () => {
-				const request = this.editing
+				const editing = this.editing
+				const orderSn = this.order.orderSn
+				const request = editing
 					? updateShipSn({ orderId: this.order.id, shipSn })
 					: shipOrder({ orderId: this.order.id, shipSn, shipChannel: 'SF' })
-				request.then(() => {
+				request.then((data) => {
 					this.showShip = false
-					uni.showToast({ title: this.editing ? '已修改' : '已发货', icon: 'success' })
+					this.openResult(editing, orderSn, true, '', data)
 					this.load()
-				}).catch(showError)
+				}).catch((err) => {
+					this.openResult(editing, orderSn, false, (err && err.errmsg) || '请求失败', null)
+				})
 			}
 			if (!this.editing) {
 				run()
@@ -121,6 +178,22 @@ export default {
 					}
 				}
 			})
+		},
+		openResult(editing, orderSn, mallOk, mallReason, data) {
+			const wxSync = data && data.wxSync
+			this.result = {
+				editing,
+				orderSn: (data && data.orderSn) || orderSn,
+				mallOk,
+				mallReason,
+				wxExecuted: mallOk,
+				wxOk: !!(wxSync && wxSync.success),
+				wxMessage: (wxSync && wxSync.message) || ''
+			}
+			this.showResult = true
+		},
+		closeResult() {
+			this.showResult = false
 		},
 		confirmRefund() {
 			uni.showModal({
@@ -204,6 +277,10 @@ export default {
 	line-height: 22px;
 	padding-top: 5px;
 }
+.express-btn {
+	color: #33755b;
+	font-size: 14px;
+}
 .phone,
 .warn {
 	color: #317358;
@@ -233,6 +310,12 @@ export default {
 .solid {
 	color: #fff;
 	background: linear-gradient(to right, #4d947a, #2d6d52);
+}
+.result-line {
+	margin: 14px 0 0;
+	color: #333;
+	font-size: 15px;
+	line-height: 22px;
 }
 .overlay-view {
 	background: #fff;

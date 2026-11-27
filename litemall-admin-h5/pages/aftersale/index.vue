@@ -4,6 +4,7 @@
 			<view class="category">
 				<view class="normal" @click="goOrder">订单管理</view>
 				<view class="active">售后管理</view>
+				<view class="logout" @click="confirmLogout">退出</view>
 			</view>
 		</u-sticky>
 		<view class="page">
@@ -51,6 +52,7 @@
 <script>
 import { listAftersale, receptAftersale, rejectAftersale, refundAftersale, setCurrentAftersale } from '@/api/aftersale'
 import { aftersaleStatusText, aftersaleTypeText, formatTime, showError } from '@/util/order'
+import { confirmLogout } from '@/util/logout'
 
 export default {
 	data() {
@@ -80,6 +82,7 @@ export default {
 		goOrder() {
 			uni.redirectTo({ url: '/pages/order/index' })
 		},
+		confirmLogout,
 		reload() {
 			this.page = 1
 			this.list = []
@@ -185,6 +188,11 @@ export default {
 		color: #333;
 		font-size: 18px;
 		font-weight: bold;
+	}
+	.logout {
+		margin-left: auto;
+		color: #878787;
+		font-size: 14px;
 	}
 }
 .item {

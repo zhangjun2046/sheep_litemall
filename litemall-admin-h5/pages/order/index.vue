@@ -4,6 +4,7 @@
 			<view class="category">
 				<view class="active">订单管理</view>
 				<view class="normal" @click="goAftersale">售后管理</view>
+				<view class="logout" @click="confirmLogout">退出</view>
 			</view>
 			<u-tabs
 				:list="tabs"
@@ -80,7 +81,7 @@
 				<view class="line"></view>
 				<view class="flex-end">
 					<view v-if="item.orderStatus == 201" class="number-btn" @click.stop="openShip(item, false)">填写单号</view>
-					<view v-if="item.orderStatus == 301" class="number-btn" @click.stop="openShip(item, true)">修改单号</view>
+					<view v-if="canEditSn(item)" class="number-btn" @click.stop="openShip(item, true)">修改单号</view>
 					<view v-if="item.orderStatus == 202" class="number-btn" @click.stop="confirmRefund(item)">同意退款</view>
 					<view class="detail" @click.stop="openDetail(item)">详情</view>
 				</view>
@@ -109,12 +110,23 @@
 				</view>
 			</view>
 		</u-overlay>
+		<u-overlay :show="showResult" opacity="0.65">
+			<view class="overlay-view" @click.stop>
+				<view class="overlay-title">{{ result.editing ? '修改快递单号结果' : '发货结果' }}</view>
+				<view class="result-line">{{ resultLines.mall }}</view>
+				<view class="result-line">{{ resultLines.wx }}</view>
+				<view class="flex-end">
+					<view class="confirm" @click.stop="closeResult">我知道了</view>
+				</view>
+			</view>
+		</u-overlay>
 	</view>
 </template>
 
 <script>
 import { listOrder, shipOrder, updateShipSn, refundOrder } from '@/api/order'
-import { formatTime, orderStatusText, showError } from '@/util/order'
+import { canEditShipSn, formatTime, orderStatusText, setCurrentOrderId, shipResultLines, showError } from '@/util/order'
+import { confirmLogout } from '@/util/logout'
 
 export default {
 	data() {
@@ -135,7 +147,22 @@ export default {
 			showShip: false,
 			editing: false,
 			shipSn: '',
-			current: null
+			current: null,
+			showResult: false,
+			result: {
+				editing: false,
+				orderSn: '',
+				mallOk: false,
+				mallReason: '',
+				wxExecuted: false,
+				wxOk: false,
+				wxMessage: ''
+			}
+		}
+	},
+	computed: {
+		resultLines() {
+			return shipResultLines(this.result)
 		}
 	},
 	onShow() {
@@ -156,6 +183,7 @@ export default {
 		goAftersale() {
 			uni.redirectTo({ url: '/pages/aftersale/index' })
 		},
+		confirmLogout,
 		handleTab(item) {
 			this.tabIndex = this.tabs.findIndex((tab) => tab.code === item.code)
 			this.status = item.code
@@ -217,8 +245,10 @@ export default {
 			uni.makePhoneCall({ phoneNumber: String(mobile) })
 		},
 		openDetail(item) {
-			uni.navigateTo({ url: '/pages/order/detail?id=' + item.id })
+			setCurrentOrderId(item.id)
+			uni.navigateTo({ url: '/pages/order/detail' })
 		},
+		canEditSn: canEditShipSn,
 		openShip(item, editing) {
 			this.current = item
 			this.editing = editing
@@ -232,14 +262,18 @@ export default {
 				return
 			}
 			const run = () => {
-				const request = this.editing
+				const editing = this.editing
+				const orderSn = this.current.orderSn
+				const request = editing
 					? updateShipSn({ orderId: this.current.id, shipSn })
 					: shipOrder({ orderId: this.current.id, shipSn, shipChannel: 'SF' })
-				request.then(() => {
+				request.then((data) => {
 					this.showShip = false
-					uni.showToast({ title: this.editing ? '已修改' : '已发货', icon: 'success' })
+					this.openResult(editing, orderSn, true, '', data)
 					this.reload()
-				}).catch(showError)
+				}).catch((err) => {
+					this.openResult(editing, orderSn, false, (err && err.errmsg) || '请求失败', null)
+				})
 			}
 			if (!this.editing) {
 				run()
@@ -254,6 +288,22 @@ export default {
 					}
 				}
 			})
+		},
+		openResult(editing, orderSn, mallOk, mallReason, data) {
+			const wxSync = data && data.wxSync
+			this.result = {
+				editing,
+				orderSn: (data && data.orderSn) || orderSn,
+				mallOk,
+				mallReason,
+				wxExecuted: mallOk,
+				wxOk: !!(wxSync && wxSync.success),
+				wxMessage: (wxSync && wxSync.message) || ''
+			}
+			this.showResult = true
+		},
+		closeResult() {
+			this.showResult = false
 		},
 		confirmRefund(item) {
 			uni.showModal({
@@ -302,6 +352,11 @@ export default {
 		color: #333;
 		font-size: 18px;
 		font-weight: bold;
+	}
+	.logout {
+		margin-left: auto;
+		color: #878787;
+		font-size: 14px;
 	}
 }
 .flex-row {
@@ -418,6 +473,12 @@ export default {
 	}
 	.flex-end {
 		margin-top: 26px;
+	}
+	.result-line {
+		margin: 14px 17px 0;
+		color: #333;
+		font-size: 15px;
+		line-height: 22px;
 	}
 	.cancel {
 		color: #33755b;

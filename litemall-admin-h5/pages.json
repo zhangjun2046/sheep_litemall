@@ -32,6 +32,14 @@
 			}
 		},
 		{
+			"path": "pages/order/express",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "物流轨迹",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/aftersale/index",
 			"style": {
 				"navigationStyle": "custom",

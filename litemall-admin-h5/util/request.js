@@ -1,5 +1,23 @@
 import { getToken, removeToken } from '@/util/userInfo'
 
+let redirectingToLogin = false
+
+function goLogin() {
+	removeToken()
+	const app = getApp()
+	if (app && app.globalData) {
+		app.globalData.token = ''
+		app.globalData.isLogin = false
+	}
+	const pages = typeof getCurrentPages === 'function' ? getCurrentPages() : []
+	const current = pages.length ? pages[pages.length - 1].route : ''
+	if (current === 'pages/login/index' || redirectingToLogin) {
+		return
+	}
+	redirectingToLogin = true
+	uni.reLaunch({ url: '/pages/login/index' })
+}
+
 function buildQuery(params) {
 	const parts = []
 	Object.keys(params || {}).forEach((key) => {
@@ -44,19 +62,24 @@ export function request(options = {}) {
 			header,
 			timeout: 25000,
 			success(res) {
-				const body = res.data || {}
+				let body = res.data
+				if (typeof body === 'string') {
+					try {
+						body = JSON.parse(body)
+					} catch (e) {
+						body = {}
+					}
+				}
+				body = body || {}
+				const status = Number(res.statusCode)
+				if (status === 301 || status === 302 || body.errno === 501) {
+					goLogin()
+					reject(body.errno ? body : { errno: 501, errmsg: '请重新登录' })
+					return
+				}
 				if (body.errno === 0) {
 					resolve(body.data)
 					return
-				}
-				if (body.errno === 501) {
-					removeToken()
-					const app = getApp()
-					if (app && app.globalData) {
-						app.globalData.token = ''
-						app.globalData.isLogin = false
-					}
-					uni.reLaunch({ url: '/pages/login/index' })
 				}
 				reject(body)
 			},

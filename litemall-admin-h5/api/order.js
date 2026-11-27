@@ -16,6 +16,14 @@ export function detailOrder(id) {
 	})
 }
 
+export function expressOrder(id) {
+	return request({
+		url: '/admin/order/express',
+		method: 'GET',
+		params: { id }
+	})
+}
+
 export function shipOrder(data) {
 	return request({
 		url: '/admin/order/ship',
