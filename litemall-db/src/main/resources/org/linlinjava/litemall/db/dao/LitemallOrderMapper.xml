@@ -27,6 +27,7 @@
     <result column="ship_sn" jdbcType="VARCHAR" property="shipSn" />
     <result column="ship_channel" jdbcType="VARCHAR" property="shipChannel" />
     <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
+    <result column="ship_sn_modified" jdbcType="TINYINT" property="shipSnModified" />
     <result column="refund_amount" jdbcType="DECIMAL" property="refundAmount" />
     <result column="refund_type" jdbcType="VARCHAR" property="refundType" />
     <result column="refund_content" jdbcType="VARCHAR" property="refundContent" />
@@ -111,7 +112,7 @@
     -->
     id, user_id, order_sn, order_status, aftersale_status, consignee, mobile, address, 
     message, goods_price, freight_price, coupon_price, integral_price, groupon_price, 
-    order_price, actual_price, pay_id, pay_time, ship_sn, ship_channel, ship_time, refund_amount, 
+    order_price, actual_price, pay_id, pay_time, ship_sn, ship_channel, ship_time, ship_sn_modified, refund_amount, 
     refund_type, refund_content, refund_time, confirm_time, comments, end_time, add_time, 
     update_time, deleted
   </sql>
@@ -531,6 +532,9 @@
       <if test="record.shipTime != null">
         ship_time = #{record.shipTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.shipSnModified != null">
+        ship_sn_modified = #{record.shipSnModified,jdbcType=TINYINT},
+      </if>
       <if test="record.refundAmount != null">
         refund_amount = #{record.refundAmount,jdbcType=DECIMAL},
       </if>
@@ -673,6 +677,9 @@
       </if>
       <if test="shipTime != null">
         ship_time = #{shipTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shipSnModified != null">
+        ship_sn_modified = #{shipSnModified,jdbcType=TINYINT},
       </if>
       <if test="refundAmount != null">
         refund_amount = #{refundAmount,jdbcType=DECIMAL},

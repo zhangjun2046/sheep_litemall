@@ -610,6 +610,7 @@ CREATE TABLE `litemall_order` (
   `ship_sn` varchar(63) DEFAULT NULL COMMENT '发货编号',
   `ship_channel` varchar(63) DEFAULT NULL COMMENT '发货快递公司',
   `ship_time` datetime DEFAULT NULL COMMENT '发货开始时间',
+  `ship_sn_modified` tinyint(1) NOT NULL DEFAULT '0' COMMENT '快递单号是否已修改过，0否1是',
   `refund_amount` decimal(10,2) DEFAULT NULL COMMENT '实际退款金额，（有可能退款金额小于实际支付金额）',
   `refund_type` varchar(63) DEFAULT NULL COMMENT '退款方式',
   `refund_content` varchar(127) DEFAULT NULL COMMENT '退款备注',

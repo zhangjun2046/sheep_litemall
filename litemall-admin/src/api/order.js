@@ -32,7 +32,8 @@ export function shipOrder(data) {
   return request({
     url: '/order/ship',
     method: 'post',
-    data
+    data,
+    timeout: 20000
   })
 }
 
@@ -40,7 +41,8 @@ export function updateShipSn(data) {
   return request({
     url: '/order/ship-sn',
     method: 'post',
-    data
+    data,
+    timeout: 20000
   })
 }
 

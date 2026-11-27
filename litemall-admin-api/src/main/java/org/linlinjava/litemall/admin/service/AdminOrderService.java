@@ -57,6 +57,8 @@ public class AdminOrderService {
     private LitemallCouponUserService couponUserService;
     @Autowired
     private WuliuService wuliuService;
+    @Autowired
+    private WxShippingSyncService wxShippingSyncService;
 
     public Object list(String nickname, String consignee, String orderSn, LocalDateTime start, LocalDateTime end, List<Short> orderStatusArray,
                        Integer page, Integer limit, String sort, String order) {
@@ -224,7 +226,7 @@ public class AdminOrderService {
 
         // 如果订单不是已付款状态，则不能发货
         if (!order.getOrderStatus().equals(OrderUtil.STATUS_PAY)) {
-            return ResponseUtil.fail(ORDER_CONFIRM_NOT_ALLOWED, "订单不能确认收货");
+            return ResponseUtil.fail(ORDER_CONFIRM_NOT_ALLOWED, "订单不能发货");
         }
 
         order.setOrderStatus(OrderUtil.STATUS_SHIP);
@@ -239,7 +241,7 @@ public class AdminOrderService {
         notifyService.notifySmsTemplate(order.getMobile(), NotifyType.SHIP, new String[]{shipSn});
 
         logHelper.logOrderSucceed("发货", "订单编号 " + order.getOrderSn());
-        return ResponseUtil.ok();
+        return ResponseUtil.ok(shipResult(order, shipSn));
     }
 
     /**
@@ -268,15 +270,27 @@ public class AdminOrderService {
         if (shipSn.equals(order.getShipSn())) {
             return ResponseUtil.fail(ORDER_CONFIRM_NOT_ALLOWED, "快递单号没有变化");
         }
+        if (Boolean.TRUE.equals(order.getShipSnModified())) {
+            return ResponseUtil.fail(ORDER_CONFIRM_NOT_ALLOWED, "快递单号只能修改一次");
+        }
 
         String oldSn = order.getShipSn();
         order.setShipSn(shipSn);
+        order.setShipSnModified(true);
         if (orderService.updateWithOptimisticLocker(order) == 0) {
             return ResponseUtil.updatedDateExpired();
         }
 
         logHelper.logOrderSucceed("修改快递单号", "订单编号 " + order.getOrderSn() + "，原单号 " + oldSn + "，新单号 " + shipSn);
-        return ResponseUtil.ok();
+        return ResponseUtil.ok(shipResult(order, shipSn));
+    }
+
+    private Map<String, Object> shipResult(LitemallOrder order, String shipSn) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("orderSn", order.getOrderSn());
+        data.put("shipSn", shipSn);
+        data.put("wxSync", wxShippingSyncService.sync(order, shipSn));
+        return data;
     }
 
     /**

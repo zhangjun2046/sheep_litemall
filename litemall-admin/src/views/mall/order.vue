@@ -95,7 +95,7 @@
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">{{ $t('app.button.delete') }}</el-button>
           <el-button type="warning" size="mini" @click="handlePay(scope.row)">{{ $t('mall_order.button.pay') }}</el-button>
           <el-button type="primary" size="mini" @click="handleShip(scope.row)">{{ $t('mall_order.button.ship') }}</el-button>
-          <el-button v-if="scope.row.orderStatus == 301" type="primary" size="mini" class="ship-sn-btn" @click="handleUpdateShipSn(scope.row)">改单号</el-button>
+          <el-button v-if="canUpdateShipSn(scope.row)" type="primary" size="mini" class="ship-sn-btn" @click="handleUpdateShipSn(scope.row)">改单号</el-button>
           <el-button type="danger" size="mini" @click="handleRefund(scope.row)">{{ $t('mall_order.button.refund') }}</el-button>
         </template>
       </el-table-column>
@@ -263,6 +263,20 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      :visible.sync="resultDialogVisible"
+      :title="resultForm.editing ? '修改快递单号结果' : '发货结果'"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+    >
+      <p>{{ mallStepText }}</p>
+      <p>{{ wxStepText }}</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="closeShipResult">我知道了</el-button>
+      </div>
+    </el-dialog>
+
     <!-- 退款对话框 -->
     <el-dialog :visible.sync="refundDialogVisible" :title="$t('mall_order.dialog.refund')">
       <el-form ref="refundForm" :model="refundForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
@@ -417,6 +431,17 @@ export default {
         shipSn: undefined
       },
       shipSnDialogVisible: false,
+      operatingOrderSn: '',
+      resultDialogVisible: false,
+      resultForm: {
+        editing: false,
+        orderSn: '',
+        mallOk: false,
+        mallReason: '',
+        wxExecuted: false,
+        wxOk: false,
+        wxMessage: ''
+      },
       payForm: {
         orderId: undefined,
         orderSn: '',
@@ -432,6 +457,32 @@ export default {
       refundDialogVisible: false,
       downloadLoading: false,
       channels: []
+    }
+  },
+  computed: {
+    mallStepText() {
+      const sn = this.resultForm.orderSn
+      if (this.resultForm.editing) {
+        return this.resultForm.mallOk
+          ? '商城端 ' + sn + ' 订单快递单号修改成功'
+          : '商城端 ' + sn + ' 订单快递单号修改失败，原因是：' + this.resultForm.mallReason
+      }
+      return this.resultForm.mallOk
+        ? '商城端 ' + sn + ' 订单发货成功'
+        : '商城端 ' + sn + ' 订单发货失败，原因是：' + this.resultForm.mallReason
+    },
+    wxStepText() {
+      if (!this.resultForm.wxExecuted) {
+        return '未执行'
+      }
+      if (this.resultForm.editing) {
+        return this.resultForm.wxOk
+          ? '微信小程序后台发货信息修改成功'
+          : '微信小程序后台发货信息修改失败，原因是：' + this.resultForm.wxMessage
+      }
+      return this.resultForm.wxOk
+        ? '微信小程序后台发货信息录入成功'
+        : '微信小程序后台发货信息录入失败，原因是：' + this.resultForm.wxMessage
     }
   },
   created() {
@@ -557,7 +608,11 @@ export default {
         this.payDialogVisible = false
       })
     },
+    canUpdateShipSn(row) {
+      return row.orderStatus == 301 && row.shipSnModified !== true && row.shipSnModified !== 1
+    },
     handleShip(row) {
+      this.operatingOrderSn = row.orderSn
       this.shipForm.orderId = row.id
       this.shipForm.shipChannel = row.shipChannel
       this.shipForm.shipSn = row.shipSn
@@ -568,6 +623,7 @@ export default {
       })
     },
     handleUpdateShipSn(row) {
+      this.operatingOrderSn = row.orderSn
       this.shipSnForm.orderId = row.id
       this.shipSnForm.shipSn = row.shipSn
       this.shipSnDialogVisible = true
@@ -584,18 +640,12 @@ export default {
       updateShipSn({
         orderId: this.shipSnForm.orderId,
         shipSn
-      }).then(() => {
+      }).then(response => {
         this.shipSnDialogVisible = false
-        this.$notify.success({
-          title: '成功',
-          message: '快递单号已修改'
-        })
-        this.getList()
+        this.showShipResult(true, true, '', response.data.data)
       }).catch(response => {
-        this.$notify.error({
-          title: '失败',
-          message: (response.data && response.data.errmsg) || '修改失败'
-        })
+        const errmsg = (response.data && response.data.errmsg) || '修改失败'
+        this.showShipResult(true, false, errmsg, null)
       })
     },
     confirmShip() {
@@ -603,19 +653,32 @@ export default {
         if (valid) {
           shipOrder(this.shipForm).then(response => {
             this.shipDialogVisible = false
-            this.$notify.success({
-              title: '成功',
-              message: '确认发货成功'
-            })
-            this.getList()
+            this.showShipResult(false, true, '', response.data.data)
           }).catch(response => {
-            this.$notify.error({
-              title: '失败',
-              message: response.data.errmsg
-            })
+            const errmsg = (response.data && response.data.errmsg) || '发货失败'
+            this.showShipResult(false, false, errmsg, null)
           })
         }
       })
+    },
+    showShipResult(editing, mallOk, mallReason, data) {
+      const wxSync = data && data.wxSync
+      this.resultForm = {
+        editing,
+        orderSn: (data && data.orderSn) || this.operatingOrderSn,
+        mallOk,
+        mallReason,
+        wxExecuted: mallOk,
+        wxOk: !!(wxSync && wxSync.success),
+        wxMessage: (wxSync && wxSync.message) || ''
+      }
+      this.resultDialogVisible = true
+      if (mallOk) {
+        this.getList()
+      }
+    },
+    closeShipResult() {
+      this.resultDialogVisible = false
     },
     handleDelete(row) {
       deleteOrder({ orderId: row.id }).then(response => {

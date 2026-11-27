@@ -21,6 +21,7 @@ public class OrderVo {
     private String mobile;
     private String shipChannel;
     private String shipSn;
+    private Boolean shipSnModified;
     private String message;
     private LocalDateTime payTime;
     private List<OrderGoodsVo> goodsVoList;
@@ -63,6 +64,14 @@ public class OrderVo {
 
     public void setShipSn(String shipSn) {
         this.shipSn = shipSn;
+    }
+
+    public Boolean getShipSnModified() {
+        return shipSnModified;
+    }
+
+    public void setShipSnModified(Boolean shipSnModified) {
+        this.shipSnModified = shipSnModified;
     }
 
     public BigDecimal getOrderPrice() {
