@@ -21,7 +21,7 @@
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="brandAvatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -30,16 +30,6 @@
               {{ $t('navbar.menu.home') }}
             </el-dropdown-item>
           </router-link>
-          <el-dropdown-item divided>
-            <a target="_blank" href="https://github.com/linlinjava/litemall">
-              {{ $t('navbar.menu.github') }}
-            </a>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <a target="_blank" href="https://gitee.com/linlinjava/litemall">
-              {{ $t('navbar.menu.gitee') }}
-            </a>
-          </el-dropdown-item>
           <el-dropdown-item divided>
             <router-link to="/profile/password">
               {{ $t('navbar.menu.password') }}
@@ -61,6 +51,7 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Notice from '@/components/Notice'
+import brandAvatar from '@/assets/basicprofile.jpeg'
 
 export default {
   components: {
@@ -69,6 +60,11 @@ export default {
     Screenfull,
     SizeSelect,
     Notice
+  },
+  data() {
+    return {
+      brandAvatar
+    }
   },
   computed: {
     ...mapGetters([
