@@ -609,7 +609,7 @@ export default {
       })
     },
     canUpdateShipSn(row) {
-      return row.orderStatus == 301 && row.shipSnModified !== true && row.shipSnModified !== 1
+      return row.orderStatus === 301 && row.shipSnModified !== true && row.shipSnModified !== 1
     },
     handleShip(row) {
       this.operatingOrderSn = row.orderSn
